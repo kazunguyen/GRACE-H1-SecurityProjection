@@ -45,3 +45,14 @@ def row_identity(rows):
 
 def resolve_root(root=None):
     return Path(root).expanduser().resolve() if root else Path(__file__).resolve().parents[1]
+
+
+def load_local_environment(root):
+    path=Path(root)/'.env'
+    if path.is_file():
+        from dotenv import load_dotenv
+        load_dotenv(path,override=False)
+    if os.name!='nt':
+        value=os.environ.get('GOOGLE_APPLICATION_CREDENTIALS','')
+        if len(value)>3 and value[1:3] in (':/',':\\'):
+            os.environ['GOOGLE_APPLICATION_CREDENTIALS']='/mnt/'+value[0].lower()+'/'+value[3:].replace('\\','/')

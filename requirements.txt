@@ -1,0 +1,8 @@
+numpy>=1.26,<3
+torch>=2.6,<3
+pyarrow>=14,<25
+PyYAML>=6,<7
+rapidfuzz>=3,<4
+google-genai>=1.0,<3
+python-dotenv>=1,<2
+pandas>=2,<4

@@ -1,0 +1,40 @@
+{
+  "datasets": [
+    "devign"
+  ],
+  "splits": [
+    "test"
+  ],
+  "objectives": [
+    "ce",
+    "supcon_hard"
+  ],
+  "llm_arms": [
+    "baseline_whitening",
+    "h1_supcon_hard"
+  ],
+  "training": {
+    "dimension": 128,
+    "epochs": 30,
+    "batch_size": 256,
+    "learning_rate": 0.001,
+    "weight_decay": 0.0001,
+    "supcon_weight": 0.1,
+    "hard_negative_weight": 0.1,
+    "temperature": 0.1,
+    "margin": 0.2,
+    "class_weighted_ce": true,
+    "patience": 6,
+    "seed": 42,
+    "device": "auto"
+  },
+  "pipeline": {
+    "semantic_top_k": 5,
+    "lexical_weight": 0.7,
+    "whitening_dimension": 256,
+    "graph_workers": 2,
+    "joern_home": null
+  },
+  "inference_workers": 4,
+  "bootstrap": 1000
+}

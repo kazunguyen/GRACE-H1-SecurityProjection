@@ -34,6 +34,8 @@ def load_embeddings(root,dataset,split,rows=None):
     matrix=np.load(path/'vectors.npy',mmap_mode='r',allow_pickle=False)
     if list(matrix.shape)!=meta['shape'] or matrix.dtype!=np.float32: raise ValueError('Invalid embedding shape/dtype')
     if len(matrix)!=len(rows): raise ValueError('Embedding count mismatch')
+    for start in range(0,len(matrix),2048):
+        if not np.isfinite(matrix[start:start+2048]).all(): raise ValueError('Non-finite cached embeddings')
     return matrix,meta
 
 def embedding_recipe(meta):

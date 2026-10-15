@@ -81,7 +81,8 @@ def train_projection(root,dataset,config=None):
         print(f'{dataset}/{cfg.objective}: reuse {folder}',flush=True);return m
     device=('cuda' if torch.cuda.is_available() else 'cpu') if cfg.device=='auto' else cfg.device
     torch.manual_seed(cfg.seed);np.random.seed(cfg.seed)
-    if device.startswith('cuda'): torch.cuda.manual_seed_all(cfg.seed)
+    if device.startswith('cuda'):
+        torch.cuda.manual_seed_all(cfg.seed);torch.cuda.reset_peak_memory_stats(device)
     torch.set_num_threads(min(4,os.cpu_count() or 1))
     mean,scale=normalization(x,ti)
     class Head(nn.Module):
@@ -145,7 +146,11 @@ def train_projection(root,dataset,config=None):
           'validation_excluded_train_duplicates':len(valid)-len(vi),'selection':'best validation head MCC at argmax; proxy for retrieval',
           'best':read_json(folder/'best.json'),'path':(folder/'projection.npz').relative_to(root).as_posix(),
           'projection_sha256':file_hash(folder/'projection.npz'),'device':device,'torch':torch.__version__,
-          'parameters':sum(p.numel() for p in model.parameters()),'train_seconds_this_session':time.perf_counter()-started}
+          'parameters':sum(p.numel() for p in model.parameters()),'numpy':np.__version__,
+          'gpu_name':torch.cuda.get_device_name(device) if device.startswith('cuda') else None,
+          'peak_gpu_allocated_bytes':torch.cuda.max_memory_allocated(device) if device.startswith('cuda') else None,
+          'peak_gpu_reserved_bytes':torch.cuda.max_memory_reserved(device) if device.startswith('cuda') else None,
+          'train_seconds_this_session':time.perf_counter()-started}
     write_json(final,meta);return meta
 
 def project_embeddings(matrix,manifest,root,batch_size=2048):
