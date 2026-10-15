@@ -2,7 +2,7 @@
 
 ## Điểm bắt đầu duy nhất
 
-Mở **D:/JUNIOR/LabThayTho/GRACE-H1-SecurityProjection/notebooks/full-pipeline.ipynb** trước. Notebook này điều phối toàn bộ; tên full_pipeline.ipynb cũ chỉ còn link chuyển đến tên mới.
+Mở **D:/JUNIOR/LabThayTho/GRACE-H1-SecurityProjection/notebooks/full-pipeline.ipynb** trước. Notebook này điều phối toàn bộ.
 
 | Stage | Môi trường mặc định | Công việc |
 |---|---|---|
