@@ -1,0 +1,25 @@
+{
+  "sources": [
+    {
+      "path": "C:/MY-FILES/LAB-THAY-THO/Graduation-Project/Ablation_V2/Reproduced-Code-Based/reproduction_pipeline.py",
+      "sha256": "0d847f49433ca0e68651b96b2244fe4d9d568460f60d5427138e30462e14ce07",
+      "functions": [
+        "parse_graphml",
+        "sequence_similarity",
+        "jaccard_tokens",
+        "raw_graph_context",
+        "fit_contracted_prompt"
+      ]
+    },
+    {
+      "path": "C:/MY-FILES/LAB-THAY-THO/Graduation-Project/Ablation_V2/Devign/Ablations/Full-cai-tien/full_cai_tien_pipeline.py",
+      "sha256": "158096fc1d235c5d3fece10d52ed6a0a2553ecf64d75bd2c74da983657e31876",
+      "functions": [
+        "features",
+        "jaccard",
+        "fit_prompt"
+      ]
+    }
+  ],
+  "adaptation": "fit_contracted_prompt calls the local fit_prompt directly; no baseline engine imports or external workspace dependency at runtime."
+}

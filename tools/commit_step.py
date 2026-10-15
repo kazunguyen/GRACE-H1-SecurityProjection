@@ -22,10 +22,10 @@ def sizes(names):
 
 def main():
     ap=argparse.ArgumentParser();ap.add_argument('action',choices=['stage','commit'])
-    ap.add_argument('--message');args=ap.parse_args()
+    ap.add_argument('--message');ap.add_argument('--paths',nargs='*');args=ap.parse_args()
     staged=paths('diff','--cached','--name-only','-z')
     if args.action=='stage':
-        names=paths('ls-files','--modified','--others','--exclude-standard','-z')+staged
+        names=(args.paths if args.paths is not None else paths('ls-files','--modified','--others','--exclude-standard','-z'))+staged
         large=sizes(names)
         if large:
             ignore=ROOT/'.gitignore';text=ignore.read_text(encoding='utf-8')
