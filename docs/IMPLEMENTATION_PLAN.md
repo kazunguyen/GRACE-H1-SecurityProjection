@@ -14,4 +14,8 @@ Không chạy training, benchmark hoặc API trong lượt authoring này; noteb
 
 Đã hoàn thành năm nhóm triển khai ở trên: workspace Git riêng; snapshot dataset/cache; projection và controls; pipeline retrieval–graph–inference–evaluation; hai notebook và bundle Kaggle. Repo không có origin. Bundle training input đã tạo sẵn; provenance/training_bundle.json ghi kích thước và SHA-256.
 
-Chưa thực thi notebook, huấn luyện head, gọi LLM hoặc đo benchmark mới. Bước sử dụng tiếp theo là mở notebooks/full_pipeline.ipynb bằng kernel WSL hiện có và Run All; hoặc train head bằng notebook Kaggle rồi import về local.
+Chưa thực thi notebook, huấn luyện head, gọi LLM hoặc đo benchmark mới. Bước sử dụng tiếp theo là mở notebooks/full-pipeline.ipynb và Run All; notebook hướng dẫn Kaggle/Colab rồi quay local để inference.
+
+## Bổ sung Colab CPU
+
+Điểm vào chuyển thành notebooks/full-pipeline.ipynb. Luồng mặc định: Kaggle train head → Colab CPU whitening/retrieval/Joern/rerank/freeze → local Vertex/evaluation. Thêm notebook Colab, input/runtime bundle, checkpoint về Drive và validation khi nhập output; docs/CLOUD_HANDOFF.md ghi từng lần chuyển môi trường.

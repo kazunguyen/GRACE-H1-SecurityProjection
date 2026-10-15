@@ -1,14 +1,12 @@
 # Cách chạy và quản lý cache
 
-## Local — full pipeline
+## Điểm bắt đầu — full pipeline
 
-Project: D:/JUNIOR/LabThayTho/GRACE-H1-SecurityProjection. Dùng kernel WSL đã có trong lab, hoặc Python3.10+ với requirements. Nếu chỉ train head bằng cache thì CPU dùng được. Joern chỉ cần khi thiếu graph; Linux/WSL là đường chạy khuyến nghị.
+Mở notebooks/full-pipeline.ipynb trên local trước. Mặc định notebook điều phối Kaggle train head → Colab CPU prepare → local LLM/evaluation; dừng ở Bước1/Bước2 nếu thiếu output phù hợp. Đọc docs/CLOUD_HANDOFF.md để biết chính xác zip cần upload/download. File full_pipeline.ipynb cũ chỉ là link chuyển hướng.
 
-Notebook: notebooks/full_pipeline.ipynb. Cell đầu đọc configs/experiment.json, cho phép override dataset, chạy inference, số workers và import head. Mặc định full test Devign và hai LLM arm: baseline_whitening, h1_supcon_hard. Head h1_ce được train nhưng chưa gọi LLM cho control này. Thêm h1_ce vào llm_arms nếu cần ablation objective.
+Full test Devign, hai LLM arm baseline_whitening/h1_supcon_hard. Head CE train làm control, chưa gọi LLM. Thêm ReVeal hoặc h1_ce bằng configs/experiment.json trước khi xuất input. Query cohort luôn full snapshot, không có max_targets.
 
-Muốn thêm ReVeal: datasets=[devign,reveal] trong config hoặc cell đầu. Không thay split/hyperparameter sau khi xem test để chọn kết quả đẹp. Query cohort test luôn toàn bộ snapshot, không có max_targets.
-
-Các stage CLI: train, prepare, preflight, infer, evaluate, all. Thêm --config nếu dùng file cấu hình khác. --root chỉ ra project nếu chạy ngoài thư mục gốc. Chạy từ project root để Python tìm package.
+Nếu muốn mọi stage chạy local: TRAIN_ON_KAGGLE=False, PREPARE_ON_COLAB=False; local cần PyTorch/Joern. CLI train/prepare/preflight/infer/evaluate/all vẫn chạy local như trước. Thêm --config cho cấu hình khác, --root cho project root; --allow-api để gọi API còn thiếu.
 
 ## Môi trường
 
@@ -16,7 +14,7 @@ Các stage CLI: train, prepare, preflight, infer, evaluate, all. Thêm --config 
 
 Nếu chạy Windows Python và Joern ở Linux, GraphStore gọi wsl.exe và dịch đường dẫn scratch sang /mnt/... . Nên dùng WSL kernel trực tiếp để giảm I/O và tránh khác môi trường xác thực. Không cần tải model CodeT5 vì embedding đã có.
 
-Notebook có cell cài dependency; nếu torch chưa có sẽ chọn wheel CPU cho local. Kaggle dùng GPU/PyTorch của runtime nếu đáp ứng requirements. requirements đặt giới hạn phiên bản lớn, runtime versions ghi trong manifest; không coi đó là lockfile tái lập bit-for-bit.
+Notebook local mặc định chỉ cài dependency CPU + google-genai để handoff/inference. Nếu chọn train local và torch chưa có, notebook chọn wheel CPU. Kaggle dùng GPU/PyTorch của runtime nếu đáp ứng requirements. Colab chỉ cài requirements-cpu.txt và Java21, không có bước cài torch/SDK LLM. requirements đặt giới hạn phiên bản lớn, runtime versions ghi trong manifest; không coi đó là lockfile tái lập bit-for-bit.
 
 ## Cache đã bàn giao
 
@@ -48,7 +46,11 @@ Tạo bundle bằng python tools/bundle.py training-inputs. Bundle chứa code/c
 
 Notebook Kaggle nhận cả zip còn nguyên hoặc thư mục bundle đã được giải nén dưới /kaggle/input. Có nhiều bundle thì đặt GRACE_H1_BUNDLE trỏ tới đúng zip/thư mục. Bật GPU và Internet, Run All. Giữ training config giống local để head được reuse đúng fingerprint.
 
-Sau khi train, tải grace-h1-trained-heads.zip từ Outputs. Đặt vào bundles/ local rồi đặt TRAINED_BUNDLE ở notebook hoặc chạy python tools/bundle.py import-heads --path bundles/grace-h1-trained-heads.zip. Import kiểm tra mọi checksum trước khi publish, không ghi đè file khác nội dung.
+Sau khi train, tải grace-h1-trained-heads.zip từ Outputs. Đặt vào bundles/ local (HEADS_BUNDLE mặc định trỏ đến file này), rồi Run All full-pipeline.ipynb lại; hoặc chạy python tools/bundle.py import-heads --path bundles/grace-h1-trained-heads.zip. Import kiểm tra mọi checksum trước khi publish, không ghi đè file khác nội dung.
+
+## Colab CPU
+
+Notebook notebooks/colab_cpu_prepare.ipynb nhận cpu-inputs.zip + joern-runtime.zip + trained-heads.zip qua Drive hoặc Files pane. Chọn accelerator None. Làm việc trên /content; lưu checkpoint zip về Drive khi xử lý graph và sau từng arm. Output cpu-prepared.zip mang frozen runs và cache mới về local. Xem docs/CLOUD_HANDOFF.md cho resume, matching fingerprints và cách đóng gói lại.
 
 ## Kết quả cần đọc
 

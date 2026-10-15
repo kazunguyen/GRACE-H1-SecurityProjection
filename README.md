@@ -4,7 +4,9 @@ Triển khai **H1: projection bảo mật nhỏ trên CodeT5 đóng băng** đ�
 
 ## Bắt đầu
 
-- [Notebook full pipeline local](<D:/JUNIOR/LabThayTho/GRACE-H1-SecurityProjection/notebooks/full_pipeline.ipynb>)
+- [Notebook full pipeline local](<D:/JUNIOR/LabThayTho/GRACE-H1-SecurityProjection/notebooks/full-pipeline.ipynb>)
+- [Notebook Colab CPU preparation](<D:/JUNIOR/LabThayTho/GRACE-H1-SecurityProjection/notebooks/colab_cpu_prepare.ipynb>)
+- [Hướng dẫn chuyển local → Kaggle → Colab → local](<D:/JUNIOR/LabThayTho/GRACE-H1-SecurityProjection/docs/CLOUD_HANDOFF.md>)
 - [Notebook Kaggle train projection](<D:/JUNIOR/LabThayTho/GRACE-H1-SecurityProjection/notebooks/kaggle_train_projection.ipynb>)
 - [Cơ chế và thiết kế so sánh](<D:/JUNIOR/LabThayTho/GRACE-H1-SecurityProjection/docs/METHOD.md>)
 - [Cache, cấu hình và cách chạy](<D:/JUNIOR/LabThayTho/GRACE-H1-SecurityProjection/docs/RUNBOOK.md>)
@@ -29,11 +31,13 @@ provenance/cache_import.json chứa tổng hợp; cache/import_manifest.json ghi
 
 ## Chạy local
 
-Dùng kernel WSL hiện có có Joern/ADC; mở notebook local rồi Run All. Cell đầu cho phép đổi dataset, workers, bật/tắt inference và import head đã train trên Kaggle. Nếu cần graph mới, đặt JOERN_HOME; pipeline mặc định hai Joern workers, heap tối đa 2 GB mỗi process.
+Mở **notebooks/full-pipeline.ipynb** đầu tiên và Run All. Bước 1 hướng dẫn sang Kaggle để train head; Bước 2 hướng dẫn sang Colab CPU để prepare retrieval/graph/prompt. Tải output về bundles/ rồi Run All lại; khi đủ artifact khớp, notebook mới tiếp tục preflight → Vertex → evaluation ở local. Chi tiết ở docs/CLOUD_HANDOFF.md.
+
+Luồng mặc định không train hoặc chạy Joern trên local. Dùng kernel đã có ADC cho inference. Nếu chủ động chạy tất cả local, đặt TRAIN_ON_KAGGLE=False và PREPARE_ON_COLAB=False; khi cần graph mới, đặt JOERN_HOME. Pipeline mặc định hai Joern workers, heap tối đa 2 GB mỗi process.
 
 .env đã được tạo từ các cấu hình không chứa khóa bí mật tìm thấy ở workspace cũ (project/location/Joern). ADC dùng môi trường đã đăng nhập; credential files và API keys không được copy vào Git hay bundle. Có .env.example nếu chuyển máy.
 
-CLI tương đương, từ project root:
+CLI chạy các stage trên local, từ project root:
 
 ~~~bash
 python -m pip install -r requirements.txt
@@ -50,20 +54,21 @@ Nếu máy chưa có PyTorch và chỉ dùng CPU, cài PyTorch CPU trước requ
 python -m pip install "torch>=2.6,<3" --index-url https://download.pytorch.org/whl/cpu
 ~~~
 
-Chạy toàn bộ bằng CLI: python -m grace_h1.experiment all --allow-api. Không có --allow-api thì CLI chỉ dùng response cache, chưa gọi API còn thiếu. Notebook mặc định RUN_INFERENCE=True để chạy đủ các stage khi người dùng Run All; cell preflight hiển thị lượng request thiếu trước đó.
+Chạy toàn bộ bằng CLI: python -m grace_h1.experiment all --allow-api. Không có --allow-api thì CLI chỉ dùng response cache, chưa gọi API còn thiếu. Notebook mặc định RUN_INFERENCE=True; chỉ đến inference sau khi các handoff Kaggle/Colab đã khớp. Cell preflight hiển thị lượng request thiếu trước đó.
 
-## Kaggle tùy chọn
+## Bundle cloud đã chuẩn bị
 
-1. Đính kèm bundle đã tạo sẵn [grace-h1-training-inputs.zip](<D:/JUNIOR/LabThayTho/GRACE-H1-SecurityProjection/bundles/grace-h1-training-inputs.zip>) (158.284.487 bytes, ~151 MiB) làm Kaggle Dataset. Hash nằm ở provenance/training_bundle.json; tạo lại bundle nếu đổi code/config/input.
-2. Upload notebook Kaggle, bật GPU và Internet, Run All. Chỉ train các head; không gọi LLM, không cần Joern và không có test code/labels trong input bundle.
-3. Tải grace-h1-trained-heads.zip về bundles/ của project local.
-4. Đặt TRAINED_BUNDLE trong notebook local rồi Run All. Model/config/data/source khớp sẽ reuse head, không train lại.
+- bundles/grace-h1-training-inputs.zip → Kaggle GPU, train head.
+- bundles/grace-h1-cpu-inputs.zip → Colab CPU, dataset/embedding/candidate/graph cache.
+- bundles/grace-h1-joern-runtime.zip → Colab, Joern 4.0.623 C/C++ runtime; notebook cài Java21.
 
-CLI tạo/import bundle:
+Colab cần thêm grace-h1-trained-heads.zip lấy từ Kaggle, rồi xuất grace-h1-cpu-prepared.zip về local. CPU notebook có checkpoint zip về Drive; không cần credential hoặc gọi LLM. Kích thước/hash ghi tại provenance/cloud_bundles.json. Hướng dẫn từng lần chuyển môi trường ở docs/CLOUD_HANDOFF.md.
 
 ~~~bash
 python tools/bundle.py training-inputs
+python tools/bundle.py cpu-inputs
 python tools/bundle.py import-heads --path bundles/grace-h1-trained-heads.zip
+python tools/bundle.py import-prepared --path bundles/grace-h1-cpu-prepared.zip
 ~~~
 
 ## Artifact và resume
@@ -83,6 +88,6 @@ Train resume theo epoch hoặc reuse head hoàn tất. Prepare reuse frozen run.
 
 ## Trạng thái bàn giao
 
-Đã tạo code, notebook, cấu hình, copy cache và commit theo từng nhóm chức năng. **Chưa chạy notebook/training/benchmark/LLM và chưa thêm hoặc chạy test suite trong lượt authoring này.** Chỉ thực hiện copy dữ liệu với checksum và rà code/diff. Vì vậy chưa tuyên bố H1 làm tăng F1/MCC hoặc xác nhận runtime toàn pipeline.
+Đã tạo code, notebook điều phối local/Kaggle/Colab, cấu hình, copy cache và commit theo từng nhóm chức năng. **Chưa chạy notebook/training/benchmark/LLM và chưa thêm hoặc chạy test suite trong lượt authoring này.** Chỉ thực hiện copy dữ liệu với checksum và rà code/diff. Vì vậy chưa tuyên bố H1 làm tăng F1/MCC hoặc xác nhận runtime toàn pipeline.
 
 Git được khởi tạo riêng, chưa có origin. Data/cache/artifacts/runs/bundles/.env được ignore; code/docs/notebook và provenance summary được version hóa. Mọi stage/commit kiểm tra kích thước file theo skill đã được chỉ định.
