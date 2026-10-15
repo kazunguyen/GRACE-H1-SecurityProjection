@@ -18,7 +18,7 @@ def train_all(root,config):
     selected={'training_config_hash':fingerprint(config['training']),'heads':heads}
     write_json(root/'artifacts'/'training_selection.json',selected);return selected
 
-def prepare_all(root,config):
+def prepare_all(root,config,checkpoint_callback=None):
     root=resolve_root(root);selected=read_json(root/'artifacts'/'training_selection.json')
     if selected['training_config_hash']!=fingerprint(config['training']): raise ValueError('Training config changed; run train first')
     runs=[]
@@ -26,7 +26,7 @@ def prepare_all(root,config):
         for split in config['splits']:
             for arm in config['llm_arms']:
                 head=None if arm=='baseline_whitening' else selected['heads'][dataset][arm.removeprefix('h1_')]
-                path=prepare_run(root,PipelineConfig(dataset=dataset,split=split,arm=arm,**config['pipeline']),head)
+                path=prepare_run(root,PipelineConfig(dataset=dataset,split=split,arm=arm,**config['pipeline']),head,checkpoint_callback)
                 runs.append({'dataset':dataset,'split':split,'arm':arm,'path':path.relative_to(root).as_posix()})
     write_json(root/'runs'/'run_selection.json',{'experiment_config':config,'runs':runs});return runs
 

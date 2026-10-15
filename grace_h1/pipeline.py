@@ -39,7 +39,7 @@ def verify_frozen(root,run_dir):
         if file_hash(root/rel)!=expected: raise ValueError(f'Frozen input changed: {rel}')
     return read_json(run_dir/'run_manifest.json')
 
-def prepare_run(root,config=None,head_manifest=None):
+def prepare_run(root,config=None,head_manifest=None,checkpoint_callback=None):
     root=resolve_root(root);cfg=config or PipelineConfig();cfg.validate();started=time.perf_counter()
     train=load_rows(root,cfg.dataset,'train',labels=True);targets=load_rows(root,cfg.dataset,cfg.split)
     tx,tm=load_embeddings(root,cfg.dataset,'train',train);qx,qm=load_embeddings(root,cfg.dataset,cfg.split,targets)
@@ -91,10 +91,13 @@ def prepare_run(root,config=None,head_manifest=None):
         graph=graphs.ensure(row)
         return {'code_sha256':graph['code_sha256'],'feature_sha256':graph['feature_sha256'],
                 'schema':graph['schema'],'nodes':len(graph['nodes']),'edges':len(graph['edges'])}
+    last_checkpoint_built=-1
     with ThreadPoolExecutor(max_workers=cfg.graph_workers) as pool:
         for n,summary in enumerate(pool.map(ensure_summary,needed.values()),1):
             graph_index.append(summary)
             if n%500==0: print(f'graphs {n}/{len(needed)}',flush=True)
+            if checkpoint_callback and n%500==0 and graphs.built!=last_checkpoint_built:
+                checkpoint_callback();last_checkpoint_built=graphs.built
     trunc=contract['prompt_context_policy']['truncation_policy']
     policy=trunc|{'context_limit':contract['prompt_context_policy']['context_limit']}
     prompts=[];retrieval=[];available=0
@@ -127,6 +130,7 @@ def prepare_run(root,config=None,head_manifest=None):
     locked=paths+[output/'run_manifest.json',contract_path,template_path,root/'data'/'manifest.json']
     write_json(output/'freeze.json',{'files':{p.relative_to(root).as_posix():file_hash(p) for p in locked}})
     print(f'prepared {len(prompts)} prompts; graph coverage {available/len(targets):.1%}: {output}',flush=True)
+    if checkpoint_callback: checkpoint_callback()
     return output
 
 def evaluate_run(root,run_dir):
