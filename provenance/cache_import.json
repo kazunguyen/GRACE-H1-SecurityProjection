@@ -1,0 +1,14 @@
+{
+  "copied_bytes": 598157163,
+  "copied_files": 26895,
+  "copied_raw_cpg_binaries": false,
+  "graph_feature_bytes": 273413899,
+  "graph_feature_count": 26867,
+  "note": "Reusing exported graph features; missing graphs are computed by the full pipeline.",
+  "pooling": "masked_mean",
+  "required_code_hashes": 49641,
+  "schema": "grace_h1_import_v1",
+  "source_workspace": "C:\\MY-FILES\\LAB-THAY-THO",
+  "file_index": "cache/import_manifest.json",
+  "file_index_sha256": "3f87194c1142576eb447e44db1e820efa391a084ed475461e9fea0aa75bcc6c9"
+}

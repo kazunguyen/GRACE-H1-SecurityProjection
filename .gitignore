@@ -11,3 +11,6 @@ artifacts/
 runs/
 bundles/
 *.log
+
+# Oversized portable artifact (158284487 bytes)
+/bundles/grace-h1-training-inputs.zip
