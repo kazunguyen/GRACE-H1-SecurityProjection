@@ -12,5 +12,7 @@ runs/
 bundles/
 *.log
 
-# Oversized portable artifact (158284487 bytes)
+# Oversized portable artifacts (see provenance/cloud_bundles.json)
 /bundles/grace-h1-training-inputs.zip
+/bundles/grace-h1-cpu-inputs.zip
+/bundles/grace-h1-joern-runtime.zip
