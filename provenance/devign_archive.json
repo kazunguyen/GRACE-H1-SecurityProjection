@@ -1,0 +1,46 @@
+{
+  "schema": "grace_h1_dataset_archive_v1",
+  "snapshot_date": "2026-10-16",
+  "dataset": "devign",
+  "branch": "devign",
+  "code_commit": "e177b64",
+  "archive_root": "archives/devign/2026-10-16",
+  "manifest": "archives/devign/2026-10-16/archive_manifest.json",
+  "manifest_sha256": "829285ba4bf4971be7329274fa0f56b424cd222889ad99d72e82d07be5bb36b7",
+  "file_count": 1084,
+  "total_bytes": 818455614,
+  "moved_roots": [
+    "artifacts/heads/devign",
+    "artifacts/training_selection.json",
+    "runs/devign",
+    "runs/comparisons",
+    "runs/experiment_summary.json",
+    "runs/inference_experiment.json",
+    "runs/run_selection.json",
+    "cache/candidates",
+    "cache/projected",
+    "cache/cpu_input_inventory.json",
+    "bundles/grace-h1-cpu-inputs.zip",
+    "bundles/grace-h1-cpu-prepared.zip",
+    "bundles/grace-h1-trained-heads.zip",
+    "bundles/grace-h1-training-inputs.zip",
+    "bundles/kaggle-train-projection-ipynb.log",
+    "bundles/kaggle-training-output.json"
+  ],
+  "copied_roots": [
+    "configs/experiment.json",
+    "provenance/cloud_bundles.json",
+    "provenance/training_bundle.json"
+  ],
+  "shared_paths_kept": [
+    "data/",
+    "cache/embeddings/",
+    "cache/graphs/",
+    "cache/responses/",
+    "cache/legacy_candidates/",
+    "cache/prior_runs/",
+    "bundles/grace-h1-joern-runtime.zip"
+  ],
+  "tracked_results": "results/devign-test-2026-10-16",
+  "note": "Original relative paths and bytes preserved. Git branches version tracked files only; this local archive holds ignored Devign runtime artifacts."
+}

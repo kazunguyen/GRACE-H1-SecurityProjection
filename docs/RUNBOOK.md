@@ -4,7 +4,7 @@
 
 Mở notebooks/full-pipeline.ipynb trên local trước. Mặc định notebook điều phối Kaggle train head → Colab CPU prepare → local LLM/evaluation; dừng ở Bước1/Bước2 nếu thiếu output phù hợp. Đọc docs/CLOUD_HANDOFF.md để biết chính xác zip cần upload/download.
 
-Full test Devign, hai LLM arm baseline_whitening/h1_supcon_hard. Head CE train làm control, chưa gọi LLM. Thêm ReVeal hoặc h1_ce bằng configs/experiment.json trước khi xuất input. Query cohort luôn full snapshot, không có max_targets.
+Nhánh reveal chạy full test ReVeal (2.274 mẫu), hai LLM arm baseline_whitening/h1_supcon_hard, seed 42. Head CE train làm control, chưa gọi LLM. Query cohort luôn full snapshot, không có max_targets. Nhánh devign giữ notebook/kết quả cũ; artifact local và chuyển dataset được mô tả ở docs/DATASET_BRANCHES.md.
 
 Nếu muốn mọi stage chạy local: TRAIN_ON_KAGGLE=False, PREPARE_ON_COLAB=False; local cần PyTorch/Joern. CLI train/prepare/preflight/infer/evaluate/all vẫn chạy local như trước. Thêm --config cho cấu hình khác, --root cho project root; --allow-api để gọi API còn thiếu.
 

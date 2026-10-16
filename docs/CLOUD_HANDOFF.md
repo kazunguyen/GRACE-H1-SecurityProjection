@@ -25,7 +25,7 @@ Trong bundles/ của project:
 
 Kích thước/checksum thực ghi trong provenance/cloud_bundles.json. Các zip lớn được ignore theo đường dẫn cụ thể và giữ trên đĩa. Không có .env, API keys, ADC, raw responses hay CPG binaries cũ trong các bundle input. CPU bundle có query code/labels để giữ đúng snapshot/hash; retrieval mở query bằng labels=False.
 
-Head chưa train trong lượt bàn giao. grace-h1-trained-heads.zip được tạo sau khi chạy Kaggle; không có file weights giả thay thế. Cả input bundle CPU và Kaggle chứa hai dataset nhưng experiment mặc định chỉ chạy full test Devign.
+Nhánh reveal chưa có head hoặc prepared output ReVeal. grace-h1-trained-heads.zip được tạo sau khi chạy Kaggle. Cả input bundle CPU và Kaggle chứa hai dataset nhưng experiment mặc định chỉ chạy full test ReVeal (2.274 query). Devign đã được lưu trên nhánh devign và archive local; xem docs/DATASET_BRANCHES.md. Upload input mới và dùng Colab runtime/thư mục transfer riêng cho ReVeal.
 
 ## Lần chạy đầu tiên
 
@@ -39,7 +39,7 @@ Upload kaggle_train_projection.ipynb vào Kaggle, bật GPU/Internet, đính kè
 
 Run All full-pipeline.ipynb lần nữa. Bước 1 nhập head; Bước 2 dừng khi chưa có matching prepared output, đồng thời tạo/cập nhật cpu-inputs.zip.
 
-Tạo thư mục MyDrive/GRACE-H1-transfer trên Google Drive và upload:
+Tạo thư mục MyDrive/GRACE-H1-transfer-reveal trên Google Drive và upload:
 
 1. grace-h1-cpu-inputs.zip.
 2. grace-h1-joern-runtime.zip.
@@ -99,4 +99,4 @@ Runtime bundle giữ executable bits, version đọc từ jar tên io.joern.joer
 
 ## Trạng thái
 
-Đã tạo notebook và đóng gói input/runtime. Chưa chạy notebook Colab/Kaggle, preparation, training, LLM hoặc tests trong lượt này; chưa xác nhận runtime cloud hay có benchmark mới.
+Nhánh reveal đã chuẩn bị notebook/input cloud và tái sử dụng Joern runtime có sẵn. Chưa chạy training/preparation/LLM/evaluation hoặc tests cho ReVeal. Kết quả Devign lịch sử được lưu riêng; không phải kết quả ReVeal.

@@ -1,6 +1,6 @@
 {
   "datasets": [
-    "devign"
+    "reveal"
   ],
   "splits": [
     "test"

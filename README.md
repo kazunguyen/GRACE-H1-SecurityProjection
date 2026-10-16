@@ -11,7 +11,15 @@ Triển khai **H1: projection bảo mật nhỏ trên CodeT5 đóng băng** đ�
 - [Cơ chế và thiết kế so sánh](<D:/JUNIOR/LabThayTho/GRACE-H1-SecurityProjection/docs/METHOD.md>)
 - [Cache, cấu hình và cách chạy](<D:/JUNIOR/LabThayTho/GRACE-H1-SecurityProjection/docs/RUNBOOK.md>)
 
-Mặc định notebook chạy **toàn bộ test Devign (2.732 query)**, so baseline whitening với H1 SupCon + hard negatives. Head CE cũng được train làm control; chỉ gọi LLM cho CE nếu bật thêm arm. Có thể thêm ReVeal trong configs/experiment.json; cả sáu split của hai dataset đã được copy.
+Nhánh reveal mặc định chạy **toàn bộ test ReVeal (2.274 query)**, so baseline whitening với H1 SupCon + hard negatives, seed 42. Head CE cũng được train làm control; chỉ gọi LLM cho CE nếu bật thêm arm. Cả sáu split của hai dataset đã có sẵn. Kết quả Devign bên dưới là kết quả lịch sử đã lưu, chưa có benchmark ReVeal.
+
+## Nhánh và artifact theo dataset
+
+- **devign** giữ code, ba notebook đã chạy và README kết quả tại commit `e177b64`.
+- **reveal** bắt đầu từ cùng commit, mặc định chạy ReVeal; ba notebook đã xóa output Devign và chưa chạy ReVeal.
+- Artifact Devign local được gom vào [archives/devign/2026-10-16/](archives/devign/2026-10-16/), giữ nguyên cấu trúc đường dẫn tương đối và checksum. Git không lưu các artifact lớn này.
+- Graph, response cache, embedding gốc và Joern runtime được giữ dùng chung. Head, run selection và output bundle Devign đã rời đường dẫn mặc định để không bị nhập vào lượt ReVeal.
+- Colab ReVeal dùng **MyDrive/GRACE-H1-transfer-reveal** và runtime mới. Chi tiết archive và cách bắt đầu ở [DATASET_BRANCHES.md](docs/DATASET_BRANCHES.md).
 
 ## Pipeline
 
@@ -21,7 +29,7 @@ Baseline dùng whitening 256d fit trên train, cùng embedding recipe, candidate
 
 ## Kết quả thực nghiệm Devign — snapshot 16/10/2026
 
-Đã hoàn tất Kaggle train head → Colab CPU prepare → local Vertex inference và evaluation cho **toàn bộ 2.732 mẫu test Devign**, seed **42**. Cả hai arm có 2.732 dự đoán hợp lệ, không có request lỗi còn lại. ReVeal chưa được đánh giá trong lượt này; head CE đã train nhưng chưa chạy arm GRACE + LLM riêng.
+Trên nhánh devign đã hoàn tất Kaggle train head → Colab CPU prepare → local Vertex inference và evaluation cho **toàn bộ 2.732 mẫu test Devign**, seed **42**. Cả hai arm có 2.732 dự đoán hợp lệ, không có request lỗi còn lại. ReVeal chưa được đánh giá trong lượt này; head CE đã train nhưng chưa chạy arm GRACE + LLM riêng.
 
 ### Chất lượng full pipeline
 
@@ -92,10 +100,10 @@ Các snapshot nhỏ được copy nguyên nội dung báo cáo lúc ghi README, 
 - [Training selection, validation metrics, môi trường và hash head](results/devign-test-2026-10-16/training_selection.json).
 - [Manifest prepare baseline](results/devign-test-2026-10-16/baseline_whitening_run_manifest.json) và [manifest prepare H1](results/devign-test-2026-10-16/h1_supcon_hard_run_manifest.json).
 
-Raw predictions, request logs và cache vẫn nằm local trong các đường dẫn run:
+Raw predictions và request logs đã được chuyển vào archive local; graph/response cache vẫn dùng chung:
 
-- `runs/devign/test/baseline_whitening/9afe3268729648c6`
-- `runs/devign/test/h1_supcon_hard/7c4a52705268af6f`
+- `archives/devign/2026-10-16/runs/devign/test/baseline_whitening/9afe3268729648c6`
+- `archives/devign/2026-10-16/runs/devign/test/h1_supcon_hard/7c4a52705268af6f`
 
 ## Tài nguyên đã copy
 
@@ -166,6 +174,6 @@ Train resume theo epoch hoặc reuse head hoàn tất. Prepare reuse frozen run.
 
 ## Trạng thái bàn giao
 
-Đã hoàn tất full pipeline Devign qua Kaggle/Colab/local; ba notebook giữ output thực thi, kết quả và giới hạn diễn giải được ghi ở mục thực nghiệm phía trên. H1 chưa tăng F1/MCC trên test Devign ở seed 42. ReVeal và arm GRACE dùng head CE chưa được đánh giá. Lượt cập nhật tài liệu chỉ đọc output/báo cáo và diff, không chạy lại notebook, training, LLM hay test suite.
+Devign đã hoàn tất và được giữ trên nhánh devign cùng archive local. Nhánh reveal đã đổi cấu hình, xóa output notebook cũ và chuẩn bị input cloud để chạy mới; chưa chạy training/preparation/inference/evaluation cho ReVeal. H1 chưa tăng F1/MCC trên test Devign ở seed 42. Lượt chuẩn bị này không chạy test suite.
 
-Git được khởi tạo riêng, chưa có origin. Data/cache/artifacts/runs/bundles/.env được ignore; code/docs/notebook, provenance summary và snapshot kết quả nhỏ trong results/ được version hóa. Mọi stage/commit kiểm tra kích thước file theo skill đã được chỉ định.
+Git được khởi tạo riêng, chưa có origin. Data/cache/artifacts/runs/bundles/.env và archive Devign được ignore; code/docs/notebook, provenance summary và snapshot kết quả nhỏ trong results/ được version hóa. Mọi stage/commit kiểm tra kích thước file theo skill đã được chỉ định.
