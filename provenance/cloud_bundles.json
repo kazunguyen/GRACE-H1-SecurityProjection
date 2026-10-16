@@ -1,33 +1,36 @@
 {
-  "schema": "grace_h1_cloud_bundles_v1",
-  "created_utc": "2026-10-15T08:33:09.641Z",
-  "code_commit": "cbb37be",
-  "entry_notebook": "notebooks/full-pipeline.ipynb",
+  "active_datasets": [
+    "reveal"
+  ],
+  "branch": "reveal",
   "bundles": [
     {
-      "path": "bundles/grace-h1-training-inputs.zip",
-      "kind": "training_inputs",
-      "files": 36,
-      "bytes": 158287860,
-      "sha256": "c2d311f9f27136cdcb31416c32c3ad5d6d5d87230070346833f64e73f1c5a3de",
+      "bytes": 158287859,
+      "contains_test_payload": false,
       "destination": "Kaggle GPU",
-      "contains_test_payload": false
+      "files": 36,
+      "job": null,
+      "kind": "training_inputs",
+      "path": "bundles/grace-h1-training-inputs.zip",
+      "sha256": "16620d5225ffec7ec46fbe08d02ffcb4502ad2e42216ffd1b39442fffd71b145"
     },
     {
-      "path": "bundles/grace-h1-cpu-inputs.zip",
-      "kind": "cpu_inputs",
-      "files": 26916,
-      "bytes": 469601891,
-      "sha256": "29bdbab8efb5ceaec6499331593e2e462062641b63ef6004c322ba198abc886d",
-      "destination": "Colab CPU",
-      "graph_feature_count": 26867,
+      "bytes": 474420058,
+      "cache_source_archives": [
+        "archives/devign/2026-10-16/bundles/grace-h1-cpu-inputs.zip",
+        "archives/devign/2026-10-16/bundles/grace-h1-cpu-prepared.zip"
+      ],
       "contains_test_payload": true,
+      "destination": "Colab CPU",
+      "direct_file_members": 2,
+      "files": 27313,
+      "graph_feature_count": 27264,
       "job": {
         "data_manifest_sha256": "a3f86cbf6b3ac9aff681ac890711e7600e7546d52dc7fc55a73632bab902b0c4",
         "experiment": {
           "bootstrap": 1000,
           "datasets": [
-            "devign"
+            "reveal"
           ],
           "inference_workers": 4,
           "llm_arms": [
@@ -80,22 +83,32 @@
           "reference.py": "c81abb7376a8c43ba192598b63c3693884ac4eb7e4593cda9f7aaed246abc82e",
           "retrieval.py": "bad51d118378290b6a9f34c6e52bbdbdd67ef9017b5d98d472816f01e68f722e"
         }
-      }
+      },
+      "kind": "cpu_inputs",
+      "path": "bundles/grace-h1-cpu-inputs.zip",
+      "reused_archive_members": 27311,
+      "sha256": "51531ee8549b46bfbb033c7b4ee0ecff0c112e97da6009e997e553f9e167df59"
     },
     {
-      "path": "bundles/grace-h1-joern-runtime.zip",
-      "kind": "joern_runtime",
-      "files": 219,
       "bytes": 238055408,
-      "sha256": "13637b0450c970b1f0a5b41acae5fbfaad2982956821158ed40161b157b1e6e7",
       "destination": "Colab CPU",
-      "joern_version": "4.0.623",
+      "files": 219,
       "java_major": 21,
-      "source_home": "/home/yungn/tools/joern/y/joern-cli",
-      "scope": "Linux C/C++ parse/export runtime"
+      "joern_version": "4.0.623",
+      "kind": "joern_runtime",
+      "path": "bundles/grace-h1-joern-runtime.zip",
+      "scope": "Linux C/C++ parse/export runtime",
+      "sha256": "13637b0450c970b1f0a5b41acae5fbfaad2982956821158ed40161b157b1e6e7",
+      "source_home": "/home/yungn/tools/joern/y/joern-cli"
     }
   ],
+  "code_commit": "46ee53b3ce3ff2e6977193cfdf9db0f928513219",
+  "created_utc": "2026-10-16T02:21:47.556041+00:00",
+  "entry_notebook": "notebooks/full-pipeline.ipynb",
+  "experiment_config_sha256": "27c1026912ee3d8ff16252b513df683ebde3db71f873315e46aa252f3364950a",
   "no_credentials": true,
   "no_llm_responses": true,
-  "note": "Input/runtime artifacts created; notebooks and training/preparation/inference have not been executed. Head output must be produced on Kaggle before CPU preparation."
+  "note": "ReVeal input bundles rebuilt after archiving Devign. Shared graph/embedding caches and Joern runtime reused. No ReVeal training, preparation or LLM run started.",
+  "schema": "grace_h1_cloud_bundles_v1",
+  "snapshot_date": "2026-10-16"
 }

@@ -1,20 +1,28 @@
 {
-  "path": "bundles/grace-h1-training-inputs.zip",
-  "kind": "training_inputs",
-  "files": 36,
-  "bytes": 158287860,
-  "sha256": "c2d311f9f27136cdcb31416c32c3ad5d6d5d87230070346833f64e73f1c5a3de",
+  "active_datasets": [
+    "reveal"
+  ],
+  "bytes": 158287859,
+  "code_commit": "46ee53b3ce3ff2e6977193cfdf9db0f928513219",
   "contains": [
     "implementation source",
-    "config",
+    "ReVeal experiment config",
     "train/validation canonical rows",
     "four verified embedding sets"
   ],
+  "contains_test_payload": false,
+  "destination": "Kaggle GPU",
   "excludes": [
     "test payload",
     "graph features",
     "LLM responses",
     "credentials"
   ],
-  "note": "Created from the delivered implementation; recreate after changing Python sources or training inputs."
+  "experiment_config_sha256": "27c1026912ee3d8ff16252b513df683ebde3db71f873315e46aa252f3364950a",
+  "files": 36,
+  "job": null,
+  "kind": "training_inputs",
+  "note": "Contains train/validation of both datasets; config selects ReVeal only. Recreate after changing source/config/data.",
+  "path": "bundles/grace-h1-training-inputs.zip",
+  "sha256": "16620d5225ffec7ec46fbe08d02ffcb4502ad2e42216ffd1b39442fffd71b145"
 }
