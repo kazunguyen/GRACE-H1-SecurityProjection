@@ -19,6 +19,84 @@ Cached CodeT5 768d → train-only projection 128d → common top50 → semantic 
 
 Baseline dùng whitening 256d fit trên train, cùng embedding recipe, candidate pool, reranking, graph, prompt và LLM. Đây là paired experiment mới, không ghép trực tiếp với số baseline CLS cũ. Các primitive baseline được snapshot trong grace_h1/reference.py; nguồn/hash ghi trong provenance/reference_sources.json.
 
+## Kết quả thực nghiệm Devign — snapshot 16/10/2026
+
+Đã hoàn tất Kaggle train head → Colab CPU prepare → local Vertex inference và evaluation cho **toàn bộ 2.732 mẫu test Devign**, seed **42**. Cả hai arm có 2.732 dự đoán hợp lệ, không có request lỗi còn lại. ReVeal chưa được đánh giá trong lượt này; head CE đã train nhưng chưa chạy arm GRACE + LLM riêng.
+
+### Chất lượng full pipeline
+
+Hai arm dùng cùng CodeT5 masked_mean cache, common candidate pool, reranking, một demonstration, prompt và parser. LLM: **Qwen3 Coder 480B A35B Instruct MaaS trên Vertex AI** (`publishers/qwen/models/qwen3-coder-480b-a35b-instruct-maas`), temperature 0, seed 42, max_tokens 256; parser `exact_last_line_binary_v1`.
+
+| Chỉ số trên test Devign | Baseline whitening 256d | H1 SupCon + hard negatives 128d |
+|---|---:|---:|
+| F1 | **35,73%** | **34,33%** |
+| MCC | **0,0587** | **0,0280** |
+| Precision | 51,04% | 48,34% |
+| Recall | 27,49% | 26,61% |
+| Accuracy | 54,58% | 53,22% |
+| Balanced accuracy | 52,54% | 51,22% |
+| TP / TN / FP / FN | 345 / 1.146 / 331 / 910 | 334 / 1.120 / 357 / 921 |
+| Invalid / tổng mẫu | 0 / 2.732 | 0 / 2.732 |
+
+**H1 chưa cải thiện GRACE trong lần chạy Devign này.** Chênh lệch H1 − baseline: F1 **−1,41 điểm phần trăm**, MCC **−0,0307**. Paired bootstrap 1.000 lần trên 2.732 cặp hợp lệ cho CI 95%:
+
+- F1: **[−3,00; +0,12] điểm phần trăm**, khoảng còn chứa 0.
+- MCC: **[−0,0513; −0,0090]**, khoảng hoàn toàn âm.
+
+Đây là một seed, bootstrap theo query, chưa điều chỉnh phụ thuộc giữa code/project trùng nhau; chưa thể suy rộng sang ReVeal hoặc các seed khác. Recall của cả hai arm còn thấp. Baseline luôn dự đoán safe đạt accuracy 54,06% và MCC 0; luôn dự đoán vulnerable đạt F1 62,95% và MCC 0, vì vậy cần đọc F1 cùng MCC, precision và recall.
+
+### Train head trên Kaggle
+
+Mỗi head có **98.690 tham số**, train từ embedding đóng băng trên **Tesla T4**, PyTorch 2.11.0+cu128, NumPy 2.1.3. Train giữ 21.762 dòng unique có nhãn không mâu thuẫn từ 21.854 dòng gốc. Validation chọn head có 2.724 dòng sau khi loại 8 dòng trùng code train; tiêu chí chọn là validation MCC của classifier head.
+
+| Head | Best epoch | Validation F1 | Validation MCC | Thời gian train ghi nhận | Peak CUDA allocated |
+|---|---:|---:|---:|---:|---:|
+| CE control | 16 | 58,79% | 0,2368 | 9,17 giây | 20,09 MiB |
+| SupCon + hard negatives | 13 | 57,84% | 0,2222 | 12,12 giây | 21,54 MiB |
+
+Các điểm validation này là **classifier proxy để chọn head**, không phải điểm full GRACE. Peak reserved của PyTorch là 26 MiB mỗi head; số đo allocator cho head không bao gồm toàn bộ bộ nhớ GPU, encoder hay thời gian cài môi trường.
+
+### CPU preparation trên Colab
+
+Output notebook ghi Colab CPU có RAM 12,67 GiB. Manifest ghi Python 3.13.16, NumPy 2.1.3 và RapidFuzz 3.14.6; bước prepare không gọi LLM.
+
+| Arm | Prepare ghi nhận | Graph tạo mới | Graph tái sử dụng | Query có graph nodes + edges |
+|---|---:|---:|---:|---:|
+| Baseline whitening | 61,19 phút | 247 | 11.951 | 95,61% |
+| H1 SupCon + hard negatives | 39,45 phút | 150 | 11.446 | 95,61% |
+
+Hai arm có cùng target identity và common pool SHA-256. Coverage tương ứng 2.612/2.732 query; 120 query không có graph đồng thời chứa nodes và edges. Baseline chạy trước, H1 có thể tận dụng cache thêm; các thời gian này không phải phép đo tốc độ hai arm với cache ban đầu giống nhau.
+
+### Inference và tái sử dụng response cache
+
+**Bảng sau chỉ mô tả lượt inference cuối được lưu**, đã có cache từ trước; không phải tổng chi phí chạy từ cache rỗng. Mỗi arm vẫn gọi LLM cho từng unique prompt chưa có response khớp.
+
+| Số liệu lượt cuối | Baseline whitening | H1 SupCon + hard negatives |
+|---|---:|---:|
+| Tổng query | 2.732 | 2.732 |
+| Unique prompts | 2.731 | 2.730 |
+| Query dùng cache | 2.162 | 2.269 |
+| Unique request mới / API attempts | 569 / 569 | 463 / 463 |
+| Prompt tokens của request mới | 1.853.075 | 1.515.387 |
+| Output tokens của request mới | 1.138 | 926 |
+| Tổng tokens của request mới | 1.854.213 | 1.516.313 |
+| Wall time lượt inference | 269,06 giây | 205,84 giây |
+
+Provider trả đủ usage cho toàn bộ request mới trong bảng. Preflight lưu trước khi chạy cả hai arm ghi H1 thiếu 724 prompt; đến lượt H1 thực chạy còn 463 request mới, tức có thêm 261 cache hit sau lượt baseline. **Chênh lệch request/thời gian trong bảng chưa chứng minh H1 giảm số lần gọi LLM hoặc nhanh hơn nhờ thuật toán.**
+
+### Dữ liệu đối chiếu đã lưu trong Git
+
+Các snapshot nhỏ được copy nguyên nội dung báo cáo lúc ghi README, giữ lại kết quả Devign khi lần chạy sau thay đổi file tổng hợp trong runs/ hoặc artifacts/:
+
+- [Metrics test, paired CI, config và inference usage](results/devign-test-2026-10-16/experiment_summary.json).
+- [Training selection, validation metrics, môi trường và hash head](results/devign-test-2026-10-16/training_selection.json).
+- [Manifest prepare baseline](results/devign-test-2026-10-16/baseline_whitening_run_manifest.json) và [manifest prepare H1](results/devign-test-2026-10-16/h1_supcon_hard_run_manifest.json).
+
+Raw predictions, request logs và cache vẫn nằm local trong các đường dẫn run:
+
+- `runs/devign/test/baseline_whitening/9afe3268729648c6`
+- `runs/devign/test/h1_supcon_hard/7c4a52705268af6f`
+
 ## Tài nguyên đã copy
 
 - Devign train/validation/test: 21.854 / 2.732 / 2.732 mẫu.
@@ -88,6 +166,6 @@ Train resume theo epoch hoặc reuse head hoàn tất. Prepare reuse frozen run.
 
 ## Trạng thái bàn giao
 
-Đã tạo code, notebook điều phối local/Kaggle/Colab, cấu hình, copy cache và commit theo từng nhóm chức năng. **Chưa chạy notebook/training/benchmark/LLM và chưa thêm hoặc chạy test suite trong lượt authoring này.** Chỉ thực hiện copy dữ liệu với checksum và rà code/diff. Vì vậy chưa tuyên bố H1 làm tăng F1/MCC hoặc xác nhận runtime toàn pipeline.
+Đã hoàn tất full pipeline Devign qua Kaggle/Colab/local; ba notebook giữ output thực thi, kết quả và giới hạn diễn giải được ghi ở mục thực nghiệm phía trên. H1 chưa tăng F1/MCC trên test Devign ở seed 42. ReVeal và arm GRACE dùng head CE chưa được đánh giá. Lượt cập nhật tài liệu chỉ đọc output/báo cáo và diff, không chạy lại notebook, training, LLM hay test suite.
 
-Git được khởi tạo riêng, chưa có origin. Data/cache/artifacts/runs/bundles/.env được ignore; code/docs/notebook và provenance summary được version hóa. Mọi stage/commit kiểm tra kích thước file theo skill đã được chỉ định.
+Git được khởi tạo riêng, chưa có origin. Data/cache/artifacts/runs/bundles/.env được ignore; code/docs/notebook, provenance summary và snapshot kết quả nhỏ trong results/ được version hóa. Mọi stage/commit kiểm tra kích thước file theo skill đã được chỉ định.
