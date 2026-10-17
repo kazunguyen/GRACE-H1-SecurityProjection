@@ -1,0 +1,56 @@
+[
+  {
+    "id": "SupCon_2020",
+    "title": "Supervised Contrastive Learning",
+    "url": "https://papers.nips.cc/paper/2020/file/d89a66c7c80a29b1bdbab0f2a1a94af8-Paper.pdf",
+    "path": "D:\\JUNIOR\\LabThayTho\\Others_papers\\Projection-Training\\SupCon_2020.pdf",
+    "sha256": "3da9d0812b27de20e3623ea0f71933dd866f10459fdf04e1129f9f5abdc093cd",
+    "pages": 13,
+    "accessed": "2026-10-17"
+  },
+  {
+    "id": "SamplingMatters_2017",
+    "title": "Sampling Matters in Deep Embedding Learning",
+    "url": "https://openaccess.thecvf.com/content_ICCV_2017/papers/Wu_Sampling_Matters_in_ICCV_2017_paper.pdf",
+    "path": "D:\\JUNIOR\\LabThayTho\\Others_papers\\Projection-Training\\SamplingMatters_2017.pdf",
+    "sha256": "44e3355c6cc3183c99b01ffd2a9d286141f5ac86db82e5564e8f5432b39eff4b",
+    "pages": 9,
+    "accessed": "2026-10-17"
+  },
+  {
+    "id": "BCL_2022",
+    "title": "Balanced Contrastive Learning for Long-Tailed Visual Recognition",
+    "url": "https://openaccess.thecvf.com/content/CVPR2022/papers/Zhu_Balanced_Contrastive_Learning_for_Long-Tailed_Visual_Recognition_CVPR_2022_paper.pdf",
+    "path": "D:\\JUNIOR\\LabThayTho\\Others_papers\\Projection-Training\\BCL_2022.pdf",
+    "sha256": "2772e395be190f81566938e432d9f21f51589aa1c678e3c4717e2f1ffbba0271",
+    "pages": 10,
+    "accessed": "2026-10-17"
+  },
+  {
+    "id": "SPKD_2019",
+    "title": "Similarity-Preserving Knowledge Distillation",
+    "url": "https://openaccess.thecvf.com/content_ICCV_2019/papers/Tung_Similarity-Preserving_Knowledge_Distillation_ICCV_2019_paper.pdf",
+    "path": "D:\\JUNIOR\\LabThayTho\\Others_papers\\Projection-Training\\SPKD_2019.pdf",
+    "sha256": "5c156b57439a0dacca1940670bbd4840f2873956445153b16a9ab88b65016f5e",
+    "pages": 10,
+    "accessed": "2026-10-17"
+  },
+  {
+    "id": "RKD_2019",
+    "title": "Relational Knowledge Distillation",
+    "url": "https://openaccess.thecvf.com/content_CVPR_2019/papers/Park_Relational_Knowledge_Distillation_CVPR_2019_paper.pdf",
+    "path": "D:\\JUNIOR\\LabThayTho\\Others_papers\\Projection-Training\\RKD_2019.pdf",
+    "sha256": "e89e5285115b5057330572cc61a219cc71ff2ab152edbe91ed4f4f0397f02081",
+    "pages": 10,
+    "accessed": "2026-10-17"
+  },
+  {
+    "id": "EPR_2022",
+    "title": "Learning To Retrieve Prompts for In-Context Learning",
+    "url": "https://aclanthology.org/2022.naacl-main.191.pdf",
+    "path": "D:\\JUNIOR\\LabThayTho\\Others_papers\\Projection-Training\\EPR_2022.pdf",
+    "sha256": "0b88f05530aa4e233a1560ea96844c068d6a56d5938b0cf0a7e8b64ccfdfc2a1",
+    "pages": 17,
+    "accessed": "2026-10-17"
+  }
+]
