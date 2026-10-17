@@ -1,0 +1,50 @@
+{
+  "checks": {
+    "cpu_preparation_imports_torch": false,
+    "host": "Windows CPU",
+    "notebook_schema_validation": true,
+    "numpy_version": "1.26.4",
+    "torch_numpy_projection_atol": 2e-06,
+    "torch_version": "2.11.0+cpu",
+    "unit_integration_tests_passed": 8
+  },
+  "datasets": {
+    "devign": {
+      "embedding_dimension": 768,
+      "independent_validation_rows": 2724,
+      "pooling": "masked_mean",
+      "train_class_counts": [
+        11836,
+        10018
+      ],
+      "train_rows": 21854,
+      "train_unique_unambiguous_rows": 21762,
+      "unique_train_class_counts": [
+        11790,
+        9972
+      ],
+      "validation_rows": 2732
+    },
+    "reveal": {
+      "embedding_dimension": 768,
+      "independent_validation_rows": 2204,
+      "pooling": "masked_mean",
+      "train_class_counts": [
+        16387,
+        1800
+      ],
+      "train_rows": 18187,
+      "train_unique_unambiguous_rows": 17761,
+      "unique_train_class_counts": [
+        16174,
+        1587
+      ],
+      "validation_rows": 2273
+    }
+  },
+  "full_dataset_training_run": false,
+  "new_llm_calls": 0,
+  "notebook_code_cells_parse": true,
+  "parameters": 263170,
+  "synthetic_smoke_only": true
+}

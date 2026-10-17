@@ -1,0 +1,18 @@
+{
+  "branch": "projection-v2-local-metric",
+  "bytes": 69512562,
+  "datasets": [
+    "reveal"
+  ],
+  "date": "2026-10-17",
+  "files": 32,
+  "kind": "training_inputs",
+  "path": "bundles/projection-v2-training-inputs.zip",
+  "sha256": "6e32a5b4aa634cf5fb8353336499d7c34251ad1420771aa3f19d3f7bd41483e6",
+  "splits_in_payload": [
+    "train",
+    "validation"
+  ],
+  "test_vectors_or_responses_in_payload": false,
+  "verified_all_entries": true
+}

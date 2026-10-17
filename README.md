@@ -2,7 +2,17 @@
 
 Triển khai **H1: projection bảo mật nhỏ trên CodeT5 đóng băng** để chọn demonstration, sau đó chạy đủ GRACE. Encoder không fine-tune và không cần tải lại weights vì đã có embedding cache.
 
-## Bắt đầu
+## Nhánh Projection V2 đang triển khai
+
+Nhánh hiện tại `projection-v2-local-metric` triển khai residual MLP + local contrastive learning, balanced sampling, semi-hard warmup và giữ geometry của whitening teacher. Plan đã được commit trước code. [Nghiên cứu và plan](docs/PROJECTION_V2_RESEARCH_AND_PLAN.md) · [Cách chạy V2](docs/PROJECTION_V2_RUNBOOK.md).
+
+Mở **[notebooks/full-pipeline.ipynb](notebooks/full-pipeline.ipynb)** đầu tiên. Notebook điều phối **Kaggle train → CPU local/Colab → local Vertex/evaluation**, có điểm dừng và chỉ dẫn chuyển notebook. Mặc định validation ReVeal và `RUN_INFERENCE=False`; chưa có benchmark V2. H1/Devign/ReVeal bên dưới là kết quả lịch sử, vẫn có thể quay lại nhánh `devign` hoặc `reveal`.
+
+- [Kaggle train Projection V2](notebooks/kaggle_train_projection_v2.ipynb).
+- [Colab CPU preparation V2](notebooks/colab_cpu_prepare_v2.ipynb).
+- Input đã đóng gói: `bundles/projection-v2-training-inputs.zip`; metadata tại `provenance/projection_v2_bundles.json`.
+
+## Bắt đầu với H1 lịch sử
 
 - [Notebook full pipeline local](<D:/JUNIOR/LabThayTho/GRACE-H1-SecurityProjection/notebooks/full-pipeline.ipynb>)
 - [Notebook Colab CPU preparation](<D:/JUNIOR/LabThayTho/GRACE-H1-SecurityProjection/notebooks/colab_cpu_prepare.ipynb>)
@@ -157,7 +167,9 @@ Snapshot kết quả và manifest:
 
 provenance/cache_import.json chứa tổng hợp; cache/import_manifest.json ghi từng file, checksum và nguồn. Raw CPG binaries không copy: graph features đã export đủ cho retrieval/prompt; chỉ graph thiếu mới cần Joern. Số graph được copy không đồng nghĩa toàn bộ train/query của mọi arm đều đã có graph.
 
-## Chạy local
+## Chạy H1 local trên nhánh reveal
+
+Các lệnh trong mục này mô tả H1 lịch sử; dùng nhánh `reveal` để chạy lại. Với V2 trên nhánh hiện tại, dùng notebook đầu vào và runbook V2 ở đầu README.
 
 Mở **notebooks/full-pipeline.ipynb** đầu tiên và Run All. Head đã được train trên Kaggle; CPU preparation ReVeal đã chạy trên WSL `/home` và được nhập vào project. Notebook kiểm tra rồi dùng lại frozen runs, sau đó chạy preflight → Vertex inference → evaluation ở local. Nếu thiếu artifact hợp lệ, có thể chủ động bật handoff Kaggle/Colab theo hướng dẫn trong docs/CLOUD_HANDOFF.md.
 
