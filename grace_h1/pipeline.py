@@ -30,7 +30,7 @@ class PipelineConfig:
 
     def validate(self):
         if self.dataset not in ('devign','reveal') or self.split not in ('validation','test'): raise ValueError('Unsupported dataset/split')
-        if self.arm not in ('baseline_whitening','h1_ce','h1_supcon','h1_supcon_hard'): raise ValueError('Unknown arm')
+        if self.arm not in ('baseline_whitening','h1_ce','h1_supcon','h1_supcon_hard','h1_residual_ce','h1_residual_local'): raise ValueError('Unknown arm')
         if not 1<=self.semantic_top_k<=50 or not 0<=self.lexical_weight<=1 or self.graph_workers<1: raise ValueError('Invalid retrieval config')
 
 def verify_frozen(root,run_dir):
@@ -51,6 +51,8 @@ def prepare_run(root,config=None,head_manifest=None,checkpoint_callback=None):
         if cfg.arm!='h1_'+head_manifest['objective'] or head_manifest['encoder_recipe']!=recipe: raise ValueError('Wrong H1 objective/encoder recipe')
     sources={name:file_hash(Path(__file__).with_name(name)) for name in
              ('pipeline.py','reference.py','graphs.py','retrieval.py','projection.py','data.py')}
+    if head_manifest and head_manifest.get('schema')=='grace_projection_v2':
+        sources['projection_v2.py']=file_hash(Path(__file__).with_name('projection_v2.py'))
     contract_path=root/'configs'/'reference_contract.yaml';template_path=root/'configs'/'prompt_template.txt'
     contract=yaml.safe_load(contract_path.read_text(encoding='utf-8'));template=template_path.read_text(encoding='utf-8')
     if contract['retrieval_pool']['candidate_pool_size']!=50: raise ValueError('Expected common top50 contract')
@@ -65,7 +67,8 @@ def prepare_run(root,config=None,head_manifest=None,checkpoint_callback=None):
     output.mkdir(parents=True,exist_ok=True)
     common=common_candidates(root,cfg.dataset,cfg.split,targets,train)
     vkey=fingerprint({'train':tm['files'],'query':qm['files'],'arm':cfg.arm,'head':spec['head'],
-                     'whitening_dimension':cfg.whitening_dimension,'projection_source':sources['projection.py']})
+                     'whitening_dimension':cfg.whitening_dimension,'projection_source':sources['projection.py'],
+                     **({'projection_v2_source':sources['projection_v2.py']} if 'projection_v2.py' in sources else {})})
     vdir=root/'cache'/'projected'/vkey;vdir.mkdir(parents=True,exist_ok=True)
     vmeta=vdir/'manifest.json'
     if vmeta.exists():
@@ -74,7 +77,13 @@ def prepare_run(root,config=None,head_manifest=None,checkpoint_callback=None):
             if file_hash(vdir/name)!=h: raise ValueError('Projected vector cache checksum differs')
     else:
         if cfg.arm=='baseline_whitening': a,b,detail=whitening(tx,qx,cfg.whitening_dimension)
-        else: a,b=project_embeddings(tx,head_manifest,root),project_embeddings(qx,head_manifest,root);detail={'fit':'train_only','dimension':a.shape[1]}
+        else:
+            projector=project_embeddings
+            if head_manifest.get('schema')=='grace_projection_v2':
+                from .projection_v2 import project_embeddings_v2
+                projector=project_embeddings_v2
+            a,b=projector(tx,head_manifest,root),projector(qx,head_manifest,root)
+            detail={'fit':'train_only','dimension':a.shape[1],'projection_schema':head_manifest.get('schema')}
         for name,array in [('train.npy',a),('query.npy',b)]:
             temp=vdir/(name+'.tmp.npy');np.save(temp,array,allow_pickle=False);temp.replace(vdir/name)
         write_json(vmeta,{'spec':spec,'detail':detail,'files':{name:file_hash(vdir/name) for name in ('train.npy','query.npy')}})

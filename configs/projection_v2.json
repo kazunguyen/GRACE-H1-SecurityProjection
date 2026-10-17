@@ -1,0 +1,43 @@
+{
+  "datasets": ["reveal"],
+  "splits": ["validation"],
+  "objectives": ["residual_ce", "residual_local"],
+  "llm_arms": ["baseline_whitening", "h1_residual_local"],
+  "training": {
+    "dimension": 256,
+    "hidden_dimension": 256,
+    "residual_radius": 0.25,
+    "dropout": 0.1,
+    "epochs": 30,
+    "batch_size": 128,
+    "learning_rate": 0.0003,
+    "weight_decay": 0.001,
+    "temperature": 0.1,
+    "margin": 0.2,
+    "local_weight": 0.1,
+    "semi_hard_weight": 0.05,
+    "geometry_weight": 1.0,
+    "positive_neighbors": 8,
+    "negative_neighbors": 32,
+    "negatives_per_anchor": 8,
+    "hard_warmup_epochs": 3,
+    "hard_ramp_epochs": 5,
+    "patience": 8,
+    "seed": 42,
+    "selection_min_gain": 0.002,
+    "selection_max_class_drop": 0.02,
+    "selection_min_teacher_overlap": 0.5,
+    "device": "auto"
+  },
+  "pipeline": {
+    "semantic_top_k": 5,
+    "lexical_weight": 0.7,
+    "whitening_dimension": 256,
+    "graph_workers": 3,
+    "joern_home": null
+  },
+  "test_protocol_frozen": false,
+  "allow_identity_fallback_run": false,
+  "inference_workers": 4,
+  "bootstrap": 1000
+}
