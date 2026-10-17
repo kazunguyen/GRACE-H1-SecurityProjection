@@ -32,7 +32,7 @@
     "semantic_top_k": 5,
     "lexical_weight": 0.7,
     "whitening_dimension": 256,
-    "graph_workers": 2,
+    "graph_workers": 3,
     "joern_home": null
   },
   "inference_workers": 4,
