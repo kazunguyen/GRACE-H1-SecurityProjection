@@ -260,14 +260,19 @@ def train_projection_v2(root, dataset, config=None, *, stop_after_epoch=None):
         raise ValueError('Need both independent validation classes')
     source_names = ('projection_v2.py', 'projection.py', 'data.py', 'retrieval.py', 'reference.py', 'metrics.py')
     sources = {name: file_hash(Path(__file__).with_name(name)) for name in source_names}
+    data_manifest = read_json(root/'data/manifest.json')
+    supervised_rows = {s:data_manifest['datasets'][dataset][s]['rows_sha256'] for s in ('train','validation')}
     spec = {'config': asdict(cfg), 'dataset': dataset, 'train': tm, 'validation': vm,
-            'train_indices': ti.tolist(), 'validation_indices': vi.tolist(), 'sources': sources}
+            'train_indices': ti.tolist(), 'validation_indices': vi.tolist(), 'sources': sources,
+            'supervised_rows_sha256':supervised_rows}
     signature = fingerprint(spec)
     folder = root / 'artifacts' / 'projection_v2' / dataset / cfg.objective / signature[:16]
     folder.mkdir(parents=True, exist_ok=True)
     final = folder / 'manifest.json'
     if final.exists():
         manifest = read_json(final)
+        if manifest['training_fingerprint'] != signature:
+            raise ValueError('V2 cached training fingerprint differs')
         project_embeddings_v2(x[:1], manifest, root)
         return manifest
     device = ('cuda' if torch.cuda.is_available() else 'cpu') if cfg.device == 'auto' else cfg.device
@@ -291,6 +296,7 @@ def train_projection_v2(root, dataset, config=None, *, stop_after_epoch=None):
     baseline_rank = ranked_top5(teacher_train, teacher_valid[vi], positions, ids)
     baseline = retrieval_metrics(baseline_rank, baseline_rank, labels, vy)
     bank_key = fingerprint({'train':tm['files'], 'indices':ti.tolist(), 'dimension':cfg.dimension,
+                            'train_labels_sha256':supervised_rows['train'],
                             'positive_k':cfg.positive_neighbors, 'negative_k':cfg.negative_neighbors,
                             'source':sources['projection_v2.py']})
     bank_path = root / 'cache' / 'projection_v2' / (bank_key + '.npz')
@@ -305,6 +311,7 @@ def train_projection_v2(root, dataset, config=None, *, stop_after_epoch=None):
         bank_path.parent.mkdir(parents=True, exist_ok=True)
         save_arrays(bank_path, {'positives':positives, 'negatives':negatives})
         write_json(bank_meta, {'sha256':file_hash(bank_path), 'train_identity':tm['rows_identity'],
+                               'train_labels_sha256':supervised_rows['train'],
                                'labels_scope':'train unique/unambiguous only', 'key':bank_key})
     def arrays():
         return dict(mean=mean, scale=scale, teacher_mean=teacher_mean, teacher_kernel=teacher_kernel,
@@ -391,6 +398,7 @@ def train_projection_v2(root, dataset, config=None, *, stop_after_epoch=None):
     manifest={'schema':SCHEMA,'dataset':dataset,'objective':cfg.objective,'config':asdict(cfg),
               'training_fingerprint':signature,'encoder_recipe':embedding_recipe(tm),'source':sources,
               'train_identity':tm['rows_identity'],'validation_identity':vm['rows_identity'],
+              'supervised_rows_sha256':supervised_rows,
               'train_rows':len(train),'training_unique_unambiguous_rows':len(ti),
               'validation_selection_rows':len(vi),'validation_excluded_train_duplicates':len(valid)-len(vi),
               'validation_baseline':baseline,'best':best,'selection_status':best['selection_status'],

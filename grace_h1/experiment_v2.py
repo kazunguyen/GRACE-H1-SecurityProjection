@@ -61,11 +61,15 @@ def require_heads(root,config):
         raise ValueError('V2 training config changed; train/export matching heads')
     for dataset in config['datasets']:
         _,_,x,_,tm,vm,_=load_training_data(root,dataset)
+        data=read_json(root/'data/manifest.json')['datasets'][dataset]
+        supervised_rows={s:data[s]['rows_sha256'] for s in ('train','validation')}
         for objective in config['objectives']:
             h=selected['heads'][dataset][objective]
             expected=asdict(ProjectionV2Config(objective=objective,**config['training']))
             if h['config']!=expected or h['train_identity']!=tm['rows_identity'] or h['validation_identity']!=vm['rows_identity'] or h['encoder_recipe']!=embedding_recipe(tm):
                 raise ValueError('V2 head dataset/recipe/config differs')
+            if h['supervised_rows_sha256']!=supervised_rows:
+                raise ValueError('V2 train/validation code or labels changed')
             for name,digest in h['source'].items():
                 if file_hash(root/'grace_h1'/name)!=digest:
                     raise ValueError('V2 training source differs; use the exported snapshot')

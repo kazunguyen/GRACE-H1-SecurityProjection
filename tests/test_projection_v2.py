@@ -4,6 +4,8 @@ from pathlib import Path
 import shutil
 import tempfile
 import unittest
+import json
+import zipfile
 import numpy as np
 import torch
 
@@ -13,6 +15,7 @@ from grace_h1.projection_v2 import (ProjectionV2Config, fit_teacher, build_model
     project_arrays, mine_local_bank, balanced_batches, metric_losses, training_indices,
     train_projection_v2, project_embeddings_v2, acceptable)
 from grace_h1 import experiment_v2
+from grace_h1 import portable_v2
 
 ROOT=Path(__file__).resolve().parents[1]
 
@@ -137,6 +140,48 @@ class ProjectionV2Tests(unittest.TestCase):
             self.assertEqual(read_json(root/runs[1]['path']/'run_manifest.json')['target_count'],12)
             self.assertFalse(read_json(root/runs[1]['path']/'run_manifest.json')['query_labels_used_for_retrieval'])
             with self.assertRaises(ValueError): experiment_v2.validate_config(config|{'splits':['test']})
+
+    def test_bundle_roundtrip_and_path_traversal(self):
+        with tempfile.TemporaryDirectory(dir=ROOT/'cache') as tmp:
+            base=Path(tmp);root=base/'local';fixture(root)
+            training=asdict(small_config(selection_min_gain=1.1));training.pop('objective')
+            cfg={'datasets':['devign'],'objectives':['residual_local'],'splits':['validation'],'training':training,
+                 'llm_arms':['baseline_whitening','h1_residual_local'],
+                 'pipeline':{'whitening_dimension':8,'semantic_top_k':5,'lexical_weight':0.7,'graph_workers':2,'joern_home':None},
+                 'allow_identity_fallback_run':True,'test_protocol_frozen':False,'inference_workers':1,'bootstrap':20}
+            write_json(root/'configs/projection_v2.json',cfg)
+            cpu=base/'cpu.zip';train_bundle=base/'train.zip';heads=base/'heads.zip';prepared=base/'prepared.zip'
+            portable_v2.create_bundle(root,cpu,'cpu_inputs')
+            portable_v2.create_bundle(root,train_bundle,'training_inputs')
+            with zipfile.ZipFile(train_bundle) as z:
+                self.assertFalse(any('/test/' in n or '/responses/' in n or n.endswith('/test.jsonl') for n in z.namelist()))
+            experiment_v2.train_all(root,cfg)
+            portable_v2.create_bundle(root,heads,'heads')
+            remote=base/'remote';portable_v2.import_bundle(remote,cpu,'cpu_inputs')
+            portable_v2.import_bundle(remote,heads,'heads');experiment_v2.prepare_all(remote,cfg)
+            portable_v2.create_bundle(remote,prepared,'prepared')
+            portable_v2.import_bundle(root,prepared,'prepared')
+            self.assertEqual(len(experiment_v2.require_runs(root,cfg)),2)
+            self.assertEqual(len(experiment_v2.preflight_all(root,cfg)),2)
+            bad=base/'bad.zip'
+            with zipfile.ZipFile(cpu) as z: m=json.loads(z.read('bundle_manifest.json'))
+            m['entries']=[{'path':'../escape','bytes':0,'sha256':sha256(b'')}]
+            with zipfile.ZipFile(bad,'w') as z:
+                z.writestr('bundle_manifest.json',json.dumps(m));z.writestr('../escape','')
+            with self.assertRaises(ValueError): portable_v2.import_bundle(root,bad,'cpu_inputs')
+
+    def test_label_changes_invalidate_training_cache(self):
+        with tempfile.TemporaryDirectory(dir=ROOT/'cache') as tmp:
+            root=Path(tmp);fixture(root);cfg=small_config(selection_min_gain=1.1)
+            before=train_projection_v2(root,'devign',cfg)
+            path=root/'data/devign/train.jsonl'
+            rows=[json.loads(line) for line in path.read_text(encoding='utf-8').splitlines()]
+            rows[0]['label']=1-rows[0]['label'];write_jsonl(path,rows)
+            data=read_json(root/'data/manifest.json');data['datasets']['devign']['train']['rows_sha256']=file_hash(path)
+            write_json(root/'data/manifest.json',data)
+            after=train_projection_v2(root,'devign',cfg)
+            self.assertNotEqual(before['training_fingerprint'],after['training_fingerprint'])
+            self.assertEqual(len(list((root/'cache/projection_v2').glob('*.npz'))),2)
 
 
 if __name__=='__main__': unittest.main()
