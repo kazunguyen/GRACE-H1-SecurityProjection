@@ -11,12 +11,12 @@ Triển khai **H1: projection bảo mật nhỏ trên CodeT5 đóng băng** đ�
 - [Cơ chế và thiết kế so sánh](<D:/JUNIOR/LabThayTho/GRACE-H1-SecurityProjection/docs/METHOD.md>)
 - [Cache, cấu hình và cách chạy](<D:/JUNIOR/LabThayTho/GRACE-H1-SecurityProjection/docs/RUNBOOK.md>)
 
-Nhánh reveal mặc định chạy **toàn bộ test ReVeal (2.274 query)**, so baseline whitening với H1 SupCon + hard negatives, seed 42. Head CE cũng được train làm control; chỉ gọi LLM cho CE nếu bật thêm arm. Cả sáu split của hai dataset đã có sẵn. Kết quả Devign bên dưới là kết quả lịch sử đã lưu, chưa có benchmark ReVeal.
+Nhánh reveal chạy **toàn bộ test ReVeal (2.274 query)**, so baseline whitening với H1 SupCon + hard negatives, seed 42. Inference và paired evaluation đã hoàn tất; kết quả được ghi bên dưới và snapshot trong `results/reveal-test-2026-10-17/`. Head CE được train làm control nhưng không nằm trong lượt GRACE + LLM này.
 
 ## Nhánh và artifact theo dataset
 
 - **devign** giữ code, ba notebook đã chạy và README kết quả tại commit `e177b64`.
-- **reveal** bắt đầu từ cùng commit, mặc định chạy ReVeal; ba notebook đã xóa output Devign và chưa chạy ReVeal.
+- **reveal** bắt đầu từ cùng commit, mặc định chạy ReVeal; các notebook đã được chạy cho lượt ReVeal và kết quả được ghi trong README này.
 - Artifact Devign local được gom vào [archives/devign/2026-10-16/](archives/devign/2026-10-16/), giữ nguyên cấu trúc đường dẫn tương đối và checksum. Git không lưu các artifact lớn này.
 - Graph, response cache, embedding gốc và Joern runtime được giữ dùng chung. Head, run selection và output bundle Devign đã rời đường dẫn mặc định để không bị nhập vào lượt ReVeal.
 - Colab ReVeal dùng **MyDrive/GRACE-H1-transfer-reveal** và runtime mới. Chi tiết archive và cách bắt đầu ở [DATASET_BRANCHES.md](docs/DATASET_BRANCHES.md).
@@ -105,6 +105,48 @@ Raw predictions và request logs đã được chuyển vào archive local; grap
 - `archives/devign/2026-10-16/runs/devign/test/baseline_whitening/9afe3268729648c6`
 - `archives/devign/2026-10-16/runs/devign/test/h1_supcon_hard/7c4a52705268af6f`
 
+## Kết quả thực nghiệm ReVeal — snapshot 17/10/2026
+
+Inference và evaluation đã hoàn tất cho **toàn bộ 2.274 mẫu test ReVeal**, seed **42**. Cả hai arm có 2.274 dự đoán hợp lệ, không có lỗi request hoặc invalid output. LLM là Qwen3 Coder 480B A35B Instruct MaaS trên Vertex AI, temperature 0, max_tokens 256; parser `exact_last_line_binary_v1`.
+
+### Chất lượng full pipeline
+
+| Chỉ số test ReVeal | Baseline whitening 256d | H1 SupCon + hard negatives 128d |
+|---|---:|---:|
+| F1 | **17,11%** | **16,61%** |
+| MCC | **0,0318** | **0,0246** |
+| Precision | 11,65% | 11,30% |
+| Recall | 32,17% | 31,30% |
+| Accuracy | 68,47% | 68,21% |
+| Balanced accuracy | 52,36% | 51,83% |
+| TP / TN / FP / FN | 74 / 1.483 / 561 / 156 | 72 / 1.479 / 565 / 158 |
+| Invalid / tổng mẫu | 0 / 2.274 | 0 / 2.274 |
+
+H1 chưa cải thiện kết quả trên lượt ReVeal này. Chênh lệch H1 − baseline: F1 **−0,50 điểm phần trăm**, MCC **−0,0072**, precision **−0,35 điểm phần trăm**, recall **−0,87 điểm phần trăm**. Paired bootstrap 1.000 lần trên 2.274 query cho CI 95%: F1 **[−1,59; +0,52] điểm phần trăm**, MCC **[−0,0226; +0,0072]**; cả hai khoảng đều chứa 0. Bootstrap theo query chưa điều chỉnh phụ thuộc giữa các mẫu cùng code/project, nên đây là kết quả thăm dò trên một seed.
+
+Accuracy cao một phần do dữ liệu lệch lớp: luôn dự đoán safe đạt **89,89% accuracy** nhưng F1 vulnerable bằng 0 và MCC bằng 0. Vì vậy cần xem đồng thời F1, MCC, precision và recall.
+
+### Inference và usage LLM
+
+Baseline chạy trước nên H1 dùng được response cache chung từ baseline. Bảng dưới là usage phát sinh trong đúng lượt inference đã lưu, không phải phép đo chi phí thuật toán với cache ban đầu ngang nhau.
+
+| Số liệu lượt inference | Baseline whitening | H1 SupCon + hard negatives |
+|---|---:|---:|
+| Query / unique prompts | 2.274 / 2.270 | 2.274 / 2.270 |
+| Query cache hit | 0 | 1.934 |
+| Request mới / API attempts | 2.270 / 2.270 | 340 / 340 |
+| Prompt tokens request mới | 7.151.713 | 1.007.657 |
+| Tổng tokens request mới | 7.156.253 | 1.008.337 |
+| Wall time lượt inference | 504,82 giây | 97,50 giây |
+
+H1 có ít request và token mới trong lượt này vì **1.934 query khớp response cache do baseline vừa tạo**; không thể kết luận H1 tự thân giảm 85% số lần gọi LLM hay tăng tốc tương ứng. Hai arm đều hoàn tất đủ 2.274 query.
+
+Snapshot kết quả và manifest:
+
+- [Paired metrics và CI](results/reveal-test-2026-10-17/experiment_summary.json), [inference usage](results/reveal-test-2026-10-17/inference_experiment.json).
+- [Baseline manifest](results/reveal-test-2026-10-17/baseline_whitening_run_manifest.json), [H1 manifest](results/reveal-test-2026-10-17/h1_supcon_hard_run_manifest.json).
+- [Run selection](results/reveal-test-2026-10-17/run_selection.json), [training selection](results/reveal-test-2026-10-17/training_selection.json).
+
 ## Tài nguyên đã copy
 
 - Devign train/validation/test: 21.854 / 2.732 / 2.732 mẫu.
@@ -117,9 +159,9 @@ provenance/cache_import.json chứa tổng hợp; cache/import_manifest.json ghi
 
 ## Chạy local
 
-Mở **notebooks/full-pipeline.ipynb** đầu tiên và Run All. Bước 1 hướng dẫn sang Kaggle để train head; Bước 2 hướng dẫn sang Colab CPU để prepare retrieval/graph/prompt. Tải output về bundles/ rồi Run All lại; khi đủ artifact khớp, notebook mới tiếp tục preflight → Vertex → evaluation ở local. Chi tiết ở docs/CLOUD_HANDOFF.md.
+Mở **notebooks/full-pipeline.ipynb** đầu tiên và Run All. Head đã được train trên Kaggle; CPU preparation ReVeal đã chạy trên WSL `/home` và được nhập vào project. Notebook kiểm tra rồi dùng lại frozen runs, sau đó chạy preflight → Vertex inference → evaluation ở local. Nếu thiếu artifact hợp lệ, có thể chủ động bật handoff Kaggle/Colab theo hướng dẫn trong docs/CLOUD_HANDOFF.md.
 
-Luồng mặc định không train hoặc chạy Joern trên local. Dùng kernel đã có ADC cho inference. Nếu chủ động chạy tất cả local, đặt TRAIN_ON_KAGGLE=False và PREPARE_ON_COLAB=False; khi cần graph mới, đặt JOERN_HOME. Pipeline mặc định hai Joern workers, heap tối đa 2 GB mỗi process.
+Luồng mặc định không train hoặc chạy Joern trên local. Dùng kernel đã có ADC cho inference. Nếu chủ động chạy tất cả local, đặt TRAIN_ON_KAGGLE=False và PREPARE_ON_COLAB=False; khi cần graph mới, đặt JOERN_HOME. Nhánh reveal hiện dùng ba Joern workers, heap tối đa 2 GB mỗi process.
 
 .env đã được tạo từ các cấu hình không chứa khóa bí mật tìm thấy ở workspace cũ (project/location/Joern). ADC dùng môi trường đã đăng nhập; credential files và API keys không được copy vào Git hay bundle. Có .env.example nếu chuyển máy.
 
@@ -140,7 +182,7 @@ Nếu máy chưa có PyTorch và chỉ dùng CPU, cài PyTorch CPU trước requ
 python -m pip install "torch>=2.6,<3" --index-url https://download.pytorch.org/whl/cpu
 ~~~
 
-Chạy toàn bộ bằng CLI: python -m grace_h1.experiment all --allow-api. Không có --allow-api thì CLI chỉ dùng response cache, chưa gọi API còn thiếu. Notebook mặc định RUN_INFERENCE=True; chỉ đến inference sau khi các handoff Kaggle/Colab đã khớp. Cell preflight hiển thị lượng request thiếu trước đó.
+Chạy toàn bộ bằng CLI: python -m grace_h1.experiment all --allow-api. Không có --allow-api thì CLI chỉ dùng response cache, chưa gọi API còn thiếu. Notebook mặc định RUN_INFERENCE=True; trên nhánh reveal, nó dùng lại CPU preparation đã nhập và chỉ đến inference sau khi các artifact khớp. Cell preflight hiển thị lượng request thiếu trước đó.
 
 ## Bundle cloud đã chuẩn bị
 
@@ -174,6 +216,6 @@ Train resume theo epoch hoặc reuse head hoàn tất. Prepare reuse frozen run.
 
 ## Trạng thái bàn giao
 
-Devign đã hoàn tất và được giữ trên nhánh devign cùng archive local. Nhánh reveal đã đổi cấu hình, xóa output notebook cũ và chuẩn bị input cloud để chạy mới; chưa chạy training/preparation/inference/evaluation cho ReVeal. H1 chưa tăng F1/MCC trên test Devign ở seed 42. Lượt chuẩn bị này không chạy test suite.
+Devign đã hoàn tất và được giữ trên nhánh devign cùng archive local. Nhánh reveal đã hoàn tất Kaggle train, CPU preparation trên WSL, Vertex inference và paired evaluation cho ReVeal test (2.274 query). Snapshot kết quả được lưu trong `results/reveal-test-2026-10-17/`. H1 chưa tăng F1/MCC trên test Devign ở seed 42. Lượt chuẩn bị này không chạy test suite.
 
 Git được khởi tạo riêng, chưa có origin. Data/cache/artifacts/runs/bundles/.env và archive Devign được ignore; code/docs/notebook, provenance summary và snapshot kết quả nhỏ trong results/ được version hóa. Mọi stage/commit kiểm tra kích thước file theo skill đã được chỉ định.
