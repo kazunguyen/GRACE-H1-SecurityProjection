@@ -60,15 +60,15 @@ Thay classifier MCC bằng retrieval proxy trên validation độc lập: macro 
 
 Control cần có: whitening256 identity; residual_ce (CE+geometry, cùng model/sampling/selection); residual_local (đầy đủ). H1 linear cũ giữ làm historical reference. Các term đều cấu hình được để ablate locality, semi-hard, geometry; không chọn cấu hình bằng test. Seed42 dùng để giữ phép so sánh lịch sử; seed43/44 là replication offline, báo cáo riêng, không chọn seed tốt nhất rồi gọi đại diện.
 
-Sau offline validation: chạy full GRACE validation baseline/residual với prompt, graph, K=5, lexical/AST và LLM settings giống nhau; mặc định dùng cache và không gọi API mới. Bật API trong notebook khi chủ động chạy. Chỉ chuyển sang test sau khi freeze config/checkpoint dựa trên validation. Test là cohort đã từng xem kết quả, không gọi là test hoàn toàn chưa chạm. Báo paired bootstrap theo query và usage/cache riêng; nhiều seed/cluster CI là bước xác nhận tiếp theo.
+Head đã được chọn bằng offline validation proxy. Theo quyết định workflow hiện tại, khóa head/config rồi chạy paired full-GRACE benchmark trực tiếp trên test một lần; không dùng điểm test để chọn model/hyperparameter. Test đã từng được xem qua lượt H1 trước, nên không mô tả là test chưa từng chạm. Báo paired bootstrap theo query và usage/cache riêng; nhiều seed/cluster CI là bước xác nhận tiếp theo.
 
 ## 6. Triển khai trên branch mới
 
 1. Commit plan này trước khi viết implementation.
 2. Thêm module trainer/NPZ NumPy projection V2 riêng; giữ H1 linear để đối chiếu. Cache/checkpoint/selection mới trong `artifacts/projection_v2/` và `cache/projection_v2/`.
 3. Tích hợp arm `h1_residual_ce`/`h1_residual_local` vào prepare; selection/inference/evaluation của workflow V2 tách trong `runs/projection_v2/`. V2 không ghi đè `runs/run_selection.json` hoặc training selection H1.
-4. Notebook `full-pipeline.ipynb` vẫn là điểm vào duy nhất trên branch V2 và trực tiếp điều phối train ở Kaggle, CPU local/Colab, rồi inference/evaluation local. Quyết định triển khai: không tạo thêm một notebook full pipeline trùng chức năng. Bản notebook H1 đã được giữ ở nhánh reveal. Train bundle chỉ có train/validation embeddings, không có response/test embedding/credential.
-5. Tạo Kaggle notebook và Colab CPU notebook V2, zip có manifest+SHA và kiểm tra source/config khi import. Tái sử dụng embeddings, candidate pool và graph/response cache có sẵn. Không copy caches lớn vào Git.
+4. Notebook `full-pipeline.ipynb` vẫn là điểm vào duy nhất trên branch V2 và trực tiếp điều phối train ở Kaggle, CPU offline WSL `/home`, rồi inference/evaluation local. `full-pipeline.ipynb` vẫn là điểm vào duy nhất; notebook CPU riêng chỉ là bước handoff. Colab notebook cũ được giữ làm redirect local. Bản notebook H1 đã được giữ ở nhánh reveal. Train bundle chỉ có train/validation embeddings, không có response/test embedding/credential.
+5. Kế hoạch ban đầu có Kaggle notebook và Colab CPU notebook V2. CPU handoff hiện đã chuyển sang `local_cpu_prepare_v2.ipynb` chạy offline trong WSL; giữ bundle manifest+SHA, kiểm tra source/config khi import, tái sử dụng embeddings/candidate/graph cache và không đưa cache lớn vào Git.
 6. Kiểm tra có ý nghĩa: identity initialization vs whitening, Torch↔NumPy parity, norm bound, local bank loại self/sai nhãn, class balance, semi-hard edge cases/finite gradient, baseline fallback, deterministic resume, artifact corruption, bundle roundtrip/path safety và pipeline integration trên fixture.
 7. Smoke synthetic train + prepare/inference cache-only; không dùng smoke làm benchmark. Build input zip và commit từng nhóm implementation/notebook/docs sau kiểm tra byte theo skill.
 
@@ -76,4 +76,4 @@ Sau offline validation: chạy full GRACE validation baseline/residual với pro
 
 - Có plan/source provenance đã commit trước code; module train/selection/resume chạy được và export projection không cần torch ở preparation.
 - Có entry notebook và hướng dẫn chuyển môi trường rõ, input/output bundle V2 không ghi đè kết quả H1, hỗ trợ cả Devign/ReVeal.
-- Các kiểm tra mục6 pass; chưa claim tăng benchmark cho tới khi chạy validation và test paired. Kết quả nghiên cứu không đồng nghĩa đã train/evaluate full dataset.
+- Các kiểm tra mục6 pass; chưa claim tăng benchmark cho tới khi chạy test paired. Kết quả nghiên cứu không đồng nghĩa đã train/evaluate full dataset.

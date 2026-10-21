@@ -1,8 +1,18 @@
 {
-  "datasets": ["reveal"],
-  "splits": ["validation"],
-  "objectives": ["residual_ce", "residual_local"],
-  "llm_arms": ["baseline_whitening", "h1_residual_local"],
+  "datasets": [
+    "reveal"
+  ],
+  "splits": [
+    "test"
+  ],
+  "objectives": [
+    "residual_ce",
+    "residual_local"
+  ],
+  "llm_arms": [
+    "baseline_whitening",
+    "h1_residual_local"
+  ],
   "training": {
     "dimension": 256,
     "hidden_dimension": 256,
@@ -36,8 +46,8 @@
     "graph_workers": 3,
     "joern_home": null
   },
-  "test_protocol_frozen": false,
+  "test_protocol_frozen": true,
   "allow_identity_fallback_run": false,
-  "inference_workers": 4,
+  "inference_workers": 5,
   "bootstrap": 1000
 }

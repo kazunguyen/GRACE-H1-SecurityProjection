@@ -7,7 +7,7 @@ from .io import read_json, write_json, resolve_root, fingerprint, file_hash
 from .projection_v2 import ProjectionV2Config, train_projection_v2, project_embeddings_v2
 from .pipeline import PipelineConfig, prepare_run, verify_frozen, evaluate_run, compare_runs
 from .data import load_training_data, embedding_recipe
-from .inference import plan_inference, run_inference
+from .inference import plan_inference, run_inference, retry_exhausted
 
 TRAIN_SELECTION = Path('artifacts/projection_v2/training_selection.json')
 RUN_SELECTION = Path('runs/projection_v2/run_selection.json')
@@ -127,15 +127,31 @@ def prepare_all(root,config,checkpoint_callback=None):
     return runs
 
 
-def preflight_all(root,config):
+def preflight_all(root,config,*,force_fresh=False):
     root=resolve_root(root)
-    return [row|plan_inference(root,root/row['path']) for row in require_runs(root,config)]
+    return [row|plan_inference(root,root/row['path'],force_fresh=force_fresh) for row in require_runs(root,config)]
 
 
-def infer_all(root,config,allow_api=False):
+def infer_all(root,config,allow_api=False,*,force_fresh=False):
     root=resolve_root(root)
-    reports=[row|run_inference(root,root/row['path'],allow_api=allow_api,workers=config['inference_workers'])
+    reports=[row|run_inference(root,root/row['path'],allow_api=allow_api,workers=config['inference_workers'],force_fresh=force_fresh)
              for row in require_runs(root,config)]
+    write_json(root/'runs/projection_v2/inference_experiment.json',reports)
+    return reports
+
+
+def retry_exhausted_all(root,config,*,workers=None):
+    """Retry only exhausted requests for the currently selected frozen runs."""
+    root=resolve_root(root)
+    aggregate=root/'runs/projection_v2/inference_experiment.json'
+    archive=root/'runs/projection_v2/inference_experiment_before_retry.json'
+    if aggregate.exists() and not archive.exists(): write_json(archive,read_json(aggregate))
+    reports=[]
+    worker_count=workers or config['inference_workers']
+    for row in require_runs(root,config):
+        print(f"Retry exhausted only: {row['dataset']}/{row['split']}/{row['arm']} with {worker_count} workers",flush=True)
+        report=retry_exhausted(root,root/row['path'],allow_api=True,workers=worker_count)
+        reports.append(row|report)
     write_json(root/'runs/projection_v2/inference_experiment.json',reports)
     return reports
 

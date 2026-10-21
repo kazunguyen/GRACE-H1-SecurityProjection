@@ -6,10 +6,10 @@ Triển khai **H1: projection bảo mật nhỏ trên CodeT5 đóng băng** đ�
 
 Nhánh hiện tại `projection-v2-local-metric` triển khai residual MLP + local contrastive learning, balanced sampling, semi-hard warmup và giữ geometry của whitening teacher. Plan đã được commit trước code. [Nghiên cứu và plan](docs/PROJECTION_V2_RESEARCH_AND_PLAN.md) · [Cách chạy V2](docs/PROJECTION_V2_RUNBOOK.md).
 
-Mở **[notebooks/full-pipeline.ipynb](notebooks/full-pipeline.ipynb)** đầu tiên. Notebook điều phối **Kaggle train → CPU local/Colab → local Vertex/evaluation**, có điểm dừng và chỉ dẫn chuyển notebook. Mặc định validation ReVeal và `RUN_INFERENCE=False`; chưa có benchmark V2. H1/Devign/ReVeal bên dưới là kết quả lịch sử, vẫn có thể quay lại nhánh `devign` hoặc `reveal`.
+Mở **[notebooks/full-pipeline.ipynb](notebooks/full-pipeline.ipynb)** đầu tiên. Notebook điều phối **local train (Kaggle chỉ là tùy chọn) → CPU offline WSL `/home` → local Vertex/evaluation**, có điểm dừng và chỉ dẫn chuyển notebook. Benchmark ReVeal test (protocol đã khóa); notebook đang bật `RUN_INFERENCE=True` và `FORCE_FRESH_INFERENCE=True` theo yêu cầu chạy lại từ cache rỗng. Training head đã chọn bằng validation retrieval proxy. H1/Devign/ReVeal bên dưới là kết quả lịch sử, vẫn có thể quay lại nhánh `devign` hoặc `reveal`.
 
 - [Kaggle train Projection V2](notebooks/kaggle_train_projection_v2.ipynb).
-- [Colab CPU preparation V2](notebooks/colab_cpu_prepare_v2.ipynb).
+- [CPU preparation offline trên WSL](notebooks/local_cpu_prepare_v2.ipynb).
 - Input đã đóng gói: `bundles/projection-v2-training-inputs.zip`; metadata tại `provenance/projection_v2_bundles.json`.
 
 ## Bắt đầu với H1 lịch sử
@@ -171,9 +171,9 @@ provenance/cache_import.json chứa tổng hợp; cache/import_manifest.json ghi
 
 Các lệnh trong mục này mô tả H1 lịch sử; dùng nhánh `reveal` để chạy lại. Với V2 trên nhánh hiện tại, dùng notebook đầu vào và runbook V2 ở đầu README.
 
-Mở **notebooks/full-pipeline.ipynb** đầu tiên và Run All. Head đã được train trên Kaggle; CPU preparation ReVeal đã chạy trên WSL `/home` và được nhập vào project. Notebook kiểm tra rồi dùng lại frozen runs, sau đó chạy preflight → Vertex inference → evaluation ở local. Nếu thiếu artifact hợp lệ, có thể chủ động bật handoff Kaggle/Colab theo hướng dẫn trong docs/CLOUD_HANDOFF.md.
+Mở **notebooks/full-pipeline.ipynb** đầu tiên và Run All bằng kernel WSL. Nếu thiếu frozen preparation, notebook tạo/kiểm tra `projection-v2-cpu-inputs.zip` rồi dừng, hướng sang `notebooks/local_cpu_prepare_v2.ipynb`. Notebook CPU chạy offline trong `/home`, dùng cache local và xuất checkpoint/prepared bundle vào `bundles/` trên ổ D. Chạy lại full-pipeline để tự nhập prepared bundle, chạy preflight, Vertex inference (nếu bật) và evaluation.
 
-Luồng mặc định không train hoặc chạy Joern trên local. Dùng kernel đã có ADC cho inference. Nếu chủ động chạy tất cả local, đặt TRAIN_ON_KAGGLE=False và PREPARE_ON_COLAB=False; khi cần graph mới, đặt JOERN_HOME. Nhánh reveal hiện dùng ba Joern workers, heap tối đa 2 GB mỗi process.
+CPU notebook không tải package hay dữ liệu từ mạng; cần dependencies, Java 21 và Joern runtime đã có sẵn local. Inference Vertex vẫn cần mạng và ADC khi có request chưa cache. Notebook Colab cũ được giữ để chuyển hướng sang local.
 
 .env đã được tạo từ các cấu hình không chứa khóa bí mật tìm thấy ở workspace cũ (project/location/Joern). ADC dùng môi trường đã đăng nhập; credential files và API keys không được copy vào Git hay bundle. Có .env.example nếu chuyển máy.
 
@@ -194,9 +194,9 @@ Nếu máy chưa có PyTorch và chỉ dùng CPU, cài PyTorch CPU trước requ
 python -m pip install "torch>=2.6,<3" --index-url https://download.pytorch.org/whl/cpu
 ~~~
 
-Chạy toàn bộ bằng CLI: python -m grace_h1.experiment all --allow-api. Không có --allow-api thì CLI chỉ dùng response cache, chưa gọi API còn thiếu. Notebook mặc định RUN_INFERENCE=True; trên nhánh reveal, nó dùng lại CPU preparation đã nhập và chỉ đến inference sau khi các artifact khớp. Cell preflight hiển thị lượng request thiếu trước đó.
+Chạy toàn bộ bằng CLI: python -m grace_h1.experiment all --allow-api. Không có --allow-api thì CLI chỉ dùng response cache, chưa gọi API còn thiếu. Notebook V2 mặc định `RUN_INFERENCE=False`; preflight hiển thị request còn thiếu trước khi người dùng bật inference.
 
-## Bundle cloud đã chuẩn bị
+## Bundle cloud của H1 lịch sử
 
 - bundles/grace-h1-training-inputs.zip → Kaggle GPU, train head.
 - bundles/grace-h1-cpu-inputs.zip → Colab CPU, dataset/embedding/candidate/graph cache.

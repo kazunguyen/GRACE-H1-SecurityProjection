@@ -14,7 +14,7 @@ Các mặc định là giả thuyết ban đầu cần validation, chưa là hyp
 
 ## 1. Cấu hình và input
 
-Chỉnh `configs/projection_v2.json`. Mặc định dataset `reveal`, split inference `validation`, train `residual_ce` và `residual_local`; chỉ bật LLM arms baseline + residual_local. Đổi `datasets` sang `["devign"]` hoặc cả hai trước khi tạo training bundle; input chỉ chứa dataset được chọn. Pipeline H1 cũ vẫn giữ cấu hình riêng `configs/experiment.json`.
+Chỉnh `configs/projection_v2.json`. Cấu hình hiện tại dataset `reveal`, split inference `test` với `test_protocol_frozen=true`; train objectives `residual_ce` và `residual_local` đã chọn checkpoint bằng validation proxy; LLM arms baseline + residual_local. Đổi `datasets` sang `["devign"]` hoặc cả hai trước khi tạo training bundle; input chỉ chứa dataset được chọn. Pipeline H1 cũ vẫn giữ cấu hình riêng `configs/experiment.json`.
 
 Ở local hiện có venv, embeddings/canonical datasets, graph/candidate/response cache và Joern runtime zip. Notebook full-pipeline dùng các đường dẫn này trực tiếp. Nếu chuyển máy, cài `requirements.txt`; CPU preparation chỉ cần `requirements-cpu.txt`, train chỉ cần `requirements-training.txt` (GPU Kaggle có torch sẵn).
 
@@ -23,26 +23,26 @@ Chỉnh `configs/projection_v2.json`. Mặc định dataset `reveal`, split infe
 1. Cell Bước1 của full-pipeline kiểm tra head. Nếu chưa có, nó tạo `bundles/projection-v2-training-inputs.zip` rồi dừng có chỉ dẫn.
 2. Upload zip vào Kaggle dataset/input; mở `notebooks/kaggle_train_projection_v2.ipynb`, bật GPU T4 và Internet, Run All.
 3. Log mỗi epoch ghi loss, macro label P@5 và top5 overlap. `last.pt` chứa model/optimizer/scheduler/RNG. Khi interrupt, finally xuất `projection-v2-training-checkpoint.zip`; gán `RESUME_ZIP` ở lần tiếp theo để import phần đã xong. Runtime bị xóa đột ngột trước khi export thì chỉ checkpoint/Output đã lưu ra ngoài còn dùng được.
-4. Tải `projection-v2-heads.zip` vào `bundles/` local. Bundle này cũng dùng trên Colab CPU. `EXTRA_SEEDS=[43,44]` chạy replication offline và khôi phục selection seed42; không chọn seed tốt nhất bằng test. Replication summary được lưu kèm artifact.
+4. Tải `projection-v2-heads.zip` vào `bundles/` local. Bundle CPU được notebook WSL local nhập trực tiếp. `EXTRA_SEEDS=[43,44]` chạy replication offline và khôi phục selection seed42; không chọn seed tốt nhất bằng test. Replication summary được lưu kèm artifact.
 5. Chạy lại full-pipeline. Nếu arm yêu cầu có `baseline_fallback`, mặc định dừng trước CPU parsing/LLM. Đọc history, sửa config dựa trên validation và train lại. Muốn đo identity control thì bật `allow_identity_fallback_run` có chủ đích.
 
 Training artifact nằm trong `artifacts/projection_v2/<dataset>/<objective>/<fingerprint>/`; selection V2 không ghi đè selection H1. File trọng số đã có final manifest là immutable; checkpoint chưa hoàn tất có thể được cập nhật sau khi xác minh toàn bộ archive.
 
-## 3. CPU local hoặc Colab
+## 3. CPU local offline trên WSL
 
-Để chạy local WSL, đặt `PREPARE_ON_COLAB=False`, `JOERN_HOME` trỏ đến Joern 4.0.623/Java21. Cache graph hiện có được dùng lại; graph thiếu mới parse.
+Mở `notebooks/local_cpu_prepare_v2.ipynb` bằng kernel WSL. Notebook nhập các bundle local vào staging workspace dưới `/home`, dùng cache sẵn có, chỉ parse graph còn thiếu, rồi xuất checkpoint/prepared bundle về `bundles/` trên ổ D. Không có pip/apt install hay truy cập mạng ở bước này. Cần dependencies đã cài trong kernel, Joern C/C++ runtime local và Java21. Cache graph được lưu ngay trong workspace nên có thể chạy lại sau khi ngắt.
 
-Để chạy Colab CPU, Bước2 tạo `projection-v2-cpu-inputs.zip`. Đặt zip đó, `projection-v2-heads.zip` và runtime có sẵn `grace-h1-joern-runtime.zip` vào `MyDrive/GRACE-projection-v2-transfer`. Mở `notebooks/colab_cpu_prepare_v2.ipynb`, accelerator **None**, Run All. Parsing chạy trên `/content`, không parse trực tiếp trên Google Drive. Progress bar hiển thị graph hoàn tất, cache hit, parse mới và ID đang chạy; config mặc định3 workers, heap2GB mỗi Joern process.
+Config mặc định3 workers, heap2GB mỗi Joern process. Progress bar hiển thị cache hit, graph parse mới và record đang chạy. Sau khi notebook local tạo `projection-v2-cpu-prepared.zip`, chạy lại `full-pipeline.ipynb`; nó import prepared bundle tại chỗ. Selection V2 nằm riêng `runs/projection_v2/run_selection.json`; frozen outputs nằm trong `runs/<dataset>/<split>/<arm>/<fingerprint>/`.
 
-Checkpoint Drive theo mốc500 graph khi có thay đổi và cuối arm; interrupt cố xuất checkpoint. Input/source/config phải khớp khi resume. Tải `projection-v2-cpu-prepared.zip` về `bundles/` local, rồi chạy full-pipeline từ đầu. Selection CPU V2 nằm riêng `runs/projection_v2/run_selection.json`; frozen arm outputs nằm trong `runs/<dataset>/<split>/<arm>/<fingerprint>/`.
+`colab_cpu_prepare_v2.ipynb` vẫn được giữ để đường dẫn cũ không hỏng, nhưng hiện chỉ chuyển tới notebook WSL local.
 
 ## 4. Vertex inference và đánh giá
 
-Preflight chỉ thống kê request thiếu. Notebook mặc định `RUN_INFERENCE=False`. Đặt True khi muốn gọi Vertex bằng ADC local; SDK/key/credential không được đưa vào cloud bundles. Model, prompt, graph và parser dùng chung giữa hai arm. Cache response chỉ reuse khi exact prompt/settings khớp.
+Preflight không gọi API. Notebook hiện bật `RUN_INFERENCE=True` và `FORCE_FRESH_INFERENCE=True` cho lượt chạy lại: gửi request mới cho mọi prompt unique ở từng arm, bỏ qua cache cũ và response mà arm trước vừa tạo. Dự kiến khoảng 2.270 prompt unique mỗi arm; các lần retry có thể làm số API attempts cao hơn. Muốn chạy cache-aware ở lượt khác, đặt `FORCE_FRESH_INFERENCE=False`. Dùng Vertex bằng ADC local; SDK/key/credential không được đưa vào bundles.
 
 Kết quả riêng V2: `runs/projection_v2/inference_experiment.json` và `experiment_summary.json`. Đọc F1/MCC, precision/recall, confusion matrix, invalid rate và paired CI; usage ghi request mới/attempts/cache/tokens tách biệt. Chênh lệch cache do arm baseline chạy trước không chứng minh thuật toán tự giảm LLM calls.
 
-Sau validation, lưu report và config/checkpoint quyết định; mới đổi `splits=["test"]`, `test_protocol_frozen=true` trong config. Flag này là xác nhận protocol của người chạy, không tự kiểm chứng review validation. Không thay training params/seed theo test. Head được dùng lại khi chỉ đổi inference split; CPU bundle cần tạo lại theo split mới. Test hiện tại đã từng được xem qua các lượt H1 cũ, nên báo đúng giới hạn này.
+Head và cấu hình train đã được chốt sau lựa chọn bằng validation retrieval proxy. Config hiện chuyển sang `splits=["test"]`, `test_protocol_frozen=true` cho lượt benchmark cuối; không thay training params/seed/model theo test. Nếu chỉ đổi inference split, head được dùng lại vì training identity không đổi; CPU bundle được tạo lại để đóng gói test embeddings và graph cache. Test đã từng được xem qua các lượt H1 cũ, nên báo đúng giới hạn này.
 
 ## CLI tương đương
 
@@ -65,4 +65,4 @@ Không chạy CLI `grace_h1.experiment all` cho V2: đó là workflow H1 dùng g
 python -m unittest discover -s tests -p test_projection_v2.py -v
 ```
 
-Kiểm tra identity/whitening, Torch↔NumPy parity, residual bound, positive/negative labels, balanced coverage, no-semi-hard finite gradients, selection gates, deterministic epoch resume, corrupted weights, train không cần test split, full prepare/selection isolation, bundle roundtrip và path traversal. Đây là numerical/integration smoke trên dữ liệu giả lập; không phải kết quả train/evaluation Devign/ReVeal thật. Notebook code cells được parse khi build. GPU/Kaggle/Colab runtime thật cần chạy notebook để đo.
+Kiểm tra identity/whitening, Torch↔NumPy parity, residual bound, positive/negative labels, balanced coverage, no-semi-hard finite gradients, selection gates, deterministic epoch resume, corrupted weights, train không cần test split, full prepare/selection isolation, bundle roundtrip và path traversal. Đây là numerical/integration smoke trên dữ liệu giả lập; không phải kết quả train/evaluation Devign/ReVeal thật. Notebook code cells được parse khi build. GPU/Kaggle và WSL local runtime thật cần chạy notebook để đo.

@@ -7,12 +7,14 @@ import yaml
 from .io import load_local_environment,resolve_root,read_json,write_json,write_jsonl,iter_jsonl,file_hash,fingerprint,sha256
 from .pipeline import verify_frozen
 from .parser import parse_prediction
+from .fpt_provider import load_fpt_settings, fpt_identity, fpt_sdk
 
 
 def request_spec(root):
     contract=yaml.safe_load((root/'configs'/'reference_contract.yaml').read_text(encoding='utf-8'))
-    return {'model':contract['backbone_llm']['model'],'provider':contract['backbone_llm']['provider'],
-            'inference':contract['inference_config']}
+    settings=load_fpt_settings()
+    identity=fpt_identity(settings) if settings is not None else contract['backbone_llm']
+    return {**identity,'inference':contract['inference_config']}
 
 def request_key(prompt_sha256,spec):
     return fingerprint({'prompt_sha256':prompt_sha256,'inference_fingerprint':fingerprint(spec)})
@@ -27,6 +29,21 @@ def read_cached(root,key,prompt_hash,spec):
         raise ValueError('Response cache identity mismatch')
     if row.get('raw_response_sha256')!=sha256(row.get('raw_response','')): raise ValueError('Response cache content changed')
     return row if row.get('request_status')=='ok' else None
+
+
+def exhausted_request_keys(run_dir,groups,spec):
+    """Return only failed request keys recorded by this exact frozen run."""
+    keys=set()
+    for key,rows in groups.items():
+        path=Path(run_dir)/'requests'/(key+'.json')
+        if not path.exists(): continue
+        row=read_json(path)
+        if row.get('request_status')!='exhausted': continue
+        if (row.get('request_key')!=key or row.get('prompt_sha256')!=rows[0]['prompt_sha256']
+                or row.get('request_spec')!=spec):
+            raise ValueError('Exhausted request identity mismatch; refusing to retry')
+        keys.add(key)
+    return keys
 
 def import_prior_responses(root,spec):
     signature=fingerprint(spec);contract_sha=file_hash(root/'configs'/'reference_contract.yaml')
@@ -58,31 +75,48 @@ def import_prior_responses(root,spec):
                     imported+=1
     return imported
 
-def plan_inference(root,run_dir):
+def plan_inference(root,run_dir,*,force_fresh=False,retry_exhausted_only=False):
+    if force_fresh and retry_exhausted_only:
+        raise ValueError('force_fresh and retry_exhausted_only cannot be combined')
     root=resolve_root(root);run_dir=Path(run_dir);manifest=verify_frozen(root,run_dir)
-    spec=request_spec(root);imported=import_prior_responses(root,spec)
+    spec=request_spec(root)
+    imported=0 if force_fresh or retry_exhausted_only else import_prior_responses(root,spec)
     groups={};hits=0
     for prompt in iter_jsonl(run_dir/'prompts.jsonl'):
         if sha256(prompt['prompt'])!=prompt['prompt_sha256']: raise ValueError('Prompt bytes changed')
         key=request_key(prompt['prompt_sha256'],spec);groups.setdefault(key,[]).append(prompt)
-        hits+=read_cached(root,key,prompt['prompt_sha256'],spec) is not None
-    todo=[key for key,rows in groups.items() if read_cached(root,key,rows[0]['prompt_sha256'],spec) is None]
+        hits+=not force_fresh and read_cached(root,key,prompt['prompt_sha256'],spec) is not None
+    exhausted=exhausted_request_keys(run_dir,groups,spec) if retry_exhausted_only else set()
+    if force_fresh: todo=list(groups)
+    elif retry_exhausted_only: todo=[key for key in groups if key in exhausted]
+    else: todo=[key for key,rows in groups.items() if read_cached(root,key,rows[0]['prompt_sha256'],spec) is None]
     report={'queries':manifest['target_count'],'unique_prompts':len(groups),'cached_queries':hits,
             'new_unique_requests':len(todo),'imported_prior_responses':imported,'request_spec':spec,
+            'force_fresh':force_fresh,'retry_exhausted_only':retry_exhausted_only,
             'worst_case_attempts':len(todo)*int(re.search(r'max_attempts=(\d+)',spec['inference']['retry_policy'])[1])}
     write_json(run_dir/'inference_plan.json',report);return report
 
-def run_inference(root,run_dir,*,allow_api=False,workers=4):
+def run_inference(root,run_dir,*,allow_api=False,workers=4,force_fresh=False,retry_exhausted_only=False):
     root=resolve_root(root);load_local_environment(root);run_dir=Path(run_dir)
     if workers<1: raise ValueError('workers must be positive')
-    plan=plan_inference(root,run_dir);spec=plan['request_spec'];groups={}
+    plan=plan_inference(root,run_dir,force_fresh=force_fresh,retry_exhausted_only=retry_exhausted_only);spec=plan['request_spec'];groups={}
     for prompt in iter_jsonl(run_dir/'prompts.jsonl'):
         key=request_key(prompt['prompt_sha256'],spec);groups.setdefault(key,[]).append(prompt)
-    todo=[(key,rows[0]) for key,rows in groups.items() if read_cached(root,key,rows[0]['prompt_sha256'],spec) is None]
+    exhausted=exhausted_request_keys(run_dir,groups,spec) if retry_exhausted_only else set()
+    todo=[(key,rows[0]) for key,rows in groups.items()
+          if force_fresh or (key in exhausted if retry_exhausted_only else
+                             read_cached(root,key,rows[0]['prompt_sha256'],spec) is None)]
+    if retry_exhausted_only and not todo:
+        return plan|{'status':'no_exhausted_requests','request_error_queries':0,'api_attempts_this_run':0}
     if todo and not allow_api:
         return plan|{'status':'prepared_cache_only','action':'run again with allow_api=True to call Vertex for missing exact prompts'}
     clients=[];client_lock=threading.Lock();local=threading.local()
-    if todo:
+    settings=load_fpt_settings()
+    if todo and settings is not None:
+        genai,types=fpt_sdk(settings)
+        mode,project,location='vertexai',None,None
+        if not settings['api_key']: raise RuntimeError('Set FPT_API in the shared LabThayTho .env')
+    elif todo:
         project=os.environ.get('VERTEX_PROJECT') or os.environ.get('GOOGLE_CLOUD_PROJECT')
         location=os.environ.get('VERTEX_LOCATION') or os.environ.get('GOOGLE_CLOUD_LOCATION')
         if not project or not location: raise RuntimeError('Set VERTEX_PROJECT and VERTEX_LOCATION; use existing ADC credentials')
@@ -159,3 +193,14 @@ def run_inference(root,run_dir,*,allow_api=False,workers=4):
                  'new_request_latency_p50_p95_seconds':np.quantile(latencies,[.5,.95]).tolist() if latencies else None,
                  'wall_seconds':time.perf_counter()-started,'predictions_sha256':file_hash(run_dir/'predictions.jsonl')}
     write_json(run_dir/'inference_summary.json',report);return report
+
+
+
+def retry_exhausted(root,run_dir,*,allow_api=True,workers=4):
+    """Retry only exhausted requests in a completed inference run; never import prior-run outputs."""
+    root=resolve_root(root);run_dir=Path(run_dir)
+    summary=run_dir/'inference_summary.json'
+    archive=run_dir/'inference_summary_before_retry.json'
+    if summary.exists() and not archive.exists(): write_json(archive,read_json(summary))
+    return run_inference(root,run_dir,allow_api=allow_api,workers=workers,
+                         force_fresh=False,retry_exhausted_only=True)
