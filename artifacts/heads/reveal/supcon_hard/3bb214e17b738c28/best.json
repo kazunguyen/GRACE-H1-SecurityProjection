@@ -1,0 +1,26 @@
+{
+  "epoch": 11,
+  "metrics": {
+    "accuracy_all": 0.7599818511796733,
+    "accuracy_valid_only": 0.7599818511796733,
+    "balanced_accuracy": 0.7464617278747074,
+    "confusion_matrix_valid_only": {
+      "fn": 48,
+      "fp": 481,
+      "tn": 1545,
+      "tp": 130
+    },
+    "f1": 0.32953105196451205,
+    "invalid_n": 0,
+    "invalid_positive_n": 0,
+    "invalid_rate": 0.0,
+    "mcc": 0.30004107526271534,
+    "metric_scope": "binary metrics condition on valid labels; invalids retained and reported separately",
+    "n": 2204,
+    "precision": 0.2127659574468085,
+    "predicted_positive_rate_all": 0.2772232304900181,
+    "recall": 0.7303370786516854,
+    "recall_all_positives": 0.7303370786516854,
+    "valid_n": 2204
+  }
+}

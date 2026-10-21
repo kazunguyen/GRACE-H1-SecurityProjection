@@ -1,0 +1,56 @@
+{
+  "experiment_config": {
+    "bootstrap": 1000,
+    "datasets": [
+      "devign"
+    ],
+    "inference_workers": 4,
+    "llm_arms": [
+      "baseline_whitening",
+      "h1_supcon_hard"
+    ],
+    "objectives": [
+      "ce",
+      "supcon_hard"
+    ],
+    "pipeline": {
+      "graph_workers": 2,
+      "joern_home": null,
+      "lexical_weight": 0.7,
+      "semantic_top_k": 5,
+      "whitening_dimension": 256
+    },
+    "splits": [
+      "test"
+    ],
+    "training": {
+      "batch_size": 256,
+      "class_weighted_ce": true,
+      "device": "auto",
+      "dimension": 128,
+      "epochs": 30,
+      "hard_negative_weight": 0.1,
+      "learning_rate": 0.001,
+      "margin": 0.2,
+      "patience": 6,
+      "seed": 42,
+      "supcon_weight": 0.1,
+      "temperature": 0.1,
+      "weight_decay": 0.0001
+    }
+  },
+  "runs": [
+    {
+      "arm": "baseline_whitening",
+      "dataset": "devign",
+      "path": "runs/devign/test/baseline_whitening/9afe3268729648c6",
+      "split": "test"
+    },
+    {
+      "arm": "h1_supcon_hard",
+      "dataset": "devign",
+      "path": "runs/devign/test/h1_supcon_hard/7c4a52705268af6f",
+      "split": "test"
+    }
+  ]
+}

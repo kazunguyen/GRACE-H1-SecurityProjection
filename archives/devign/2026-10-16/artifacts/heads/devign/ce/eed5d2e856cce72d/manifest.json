@@ -1,0 +1,82 @@
+{
+  "best": {
+    "epoch": 16,
+    "metrics": {
+      "accuracy_all": 0.618575624082232,
+      "accuracy_valid_only": 0.618575624082232,
+      "balanced_accuracy": 0.6194158037908037,
+      "confusion_matrix_valid_only": {
+        "fn": 443,
+        "fp": 596,
+        "tn": 944,
+        "tp": 741
+      },
+      "f1": 0.5878619595398652,
+      "invalid_n": 0,
+      "invalid_positive_n": 0,
+      "invalid_rate": 0.0,
+      "mcc": 0.23682310961650238,
+      "metric_scope": "binary metrics condition on valid labels; invalids retained and reported separately",
+      "n": 2724,
+      "precision": 0.5542258788332087,
+      "predicted_positive_rate_all": 0.4908223201174743,
+      "recall": 0.6258445945945946,
+      "recall_all_positives": 0.6258445945945946,
+      "valid_n": 2724
+    }
+  },
+  "config": {
+    "batch_size": 256,
+    "class_weighted_ce": true,
+    "device": "auto",
+    "dimension": 128,
+    "epochs": 30,
+    "hard_negative_weight": 0.1,
+    "learning_rate": 0.001,
+    "margin": 0.2,
+    "objective": "ce",
+    "patience": 6,
+    "seed": 42,
+    "supcon_weight": 0.1,
+    "temperature": 0.1,
+    "weight_decay": 0.0001
+  },
+  "dataset": "devign",
+  "device": "cuda",
+  "encoder_recipe": {
+    "architecture": "T5Encoder",
+    "checkpoint": {
+      "config.json": "747cddfb84f44944822684ab4c1815f4043345e79f4be70e1bcdbb60b5e5dbd1",
+      "merges.txt": "5d346f84939a98df0cde902df7d60154b461cde1b90dc653ab9b81d74e752a4d",
+      "pytorch_model.bin": "053fbafd36f4011e13fe10f45d588102ffa7448f338443ff787e85360cd5e13c",
+      "vocab.json": "43bb485f4de0f2fd49b370bef4efab23ea3ab6d0019e72bdd9cec1436a6eaa2b"
+    },
+    "max_length": 512,
+    "pooling": "masked_mean",
+    "seed": 42
+  },
+  "gpu_name": "Tesla T4",
+  "numpy": "2.1.3",
+  "objective": "ce",
+  "parameters": 98690,
+  "path": "artifacts/heads/devign/ce/eed5d2e856cce72d/projection.npz",
+  "peak_gpu_allocated_bytes": 21070848,
+  "peak_gpu_reserved_bytes": 27262976,
+  "projection_sha256": "3455718eaf656448716995c73d248ae1ecaf06d5803238c441d32a737ab19148",
+  "schema": "grace_h1_projection_v1",
+  "selection": "best validation head MCC at argmax; proxy for retrieval",
+  "source": {
+    "data.py": "abb050568e2554c14307f7e6012f32afec1b7dab5d045991a7bbcc542dadf520",
+    "metrics.py": "f1d3b3bdcaa55c6120dd6ff11c1fba225d9abff41e2f68c5b5e1beac7038185e",
+    "projection.py": "d1f92309ebc34275cf714146b940b5362239e49cef262b713220156e764b8317"
+  },
+  "torch": "2.11.0+cu128",
+  "train_identity": "8ad43a0588fc996e88d3a5a806c032db5b0f4d16eaff3e547f3f9e30089f3baa",
+  "train_rows": 21854,
+  "train_seconds_this_session": 9.170520529000015,
+  "training_fingerprint": "eed5d2e856cce72d208f40ee6103879ff2371250398da8a1fe955b4aef1bad9d",
+  "training_unique_unambiguous_rows": 21762,
+  "validation_excluded_train_duplicates": 8,
+  "validation_identity": "040fe1b91b740402485a2a81fd737fe27aa0e37eadd2681f9b5f82e3586f2acb",
+  "validation_selection_rows": 2724
+}

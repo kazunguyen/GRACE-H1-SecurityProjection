@@ -1,0 +1,20 @@
+{
+  "path": "bundles/grace-h1-training-inputs.zip",
+  "kind": "training_inputs",
+  "files": 36,
+  "bytes": 158287860,
+  "sha256": "c2d311f9f27136cdcb31416c32c3ad5d6d5d87230070346833f64e73f1c5a3de",
+  "contains": [
+    "implementation source",
+    "config",
+    "train/validation canonical rows",
+    "four verified embedding sets"
+  ],
+  "excludes": [
+    "test payload",
+    "graph features",
+    "LLM responses",
+    "credentials"
+  ],
+  "note": "Created from the delivered implementation; recreate after changing Python sources or training inputs."
+}

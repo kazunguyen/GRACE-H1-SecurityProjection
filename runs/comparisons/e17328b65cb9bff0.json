@@ -1,0 +1,32 @@
+{
+  "bootstrap_repetitions": 1000,
+  "ci95_query_bootstrap": {
+    "f1": [
+      -0.007733224328921181,
+      0.01769193375236379
+    ],
+    "mcc": [
+      -0.009832966778776799,
+      0.025418216026366316
+    ],
+    "precision": [
+      -0.004674553606870814,
+      0.012610393376424694
+    ],
+    "recall": [
+      -0.019323671497584516,
+      0.03078947368421051
+    ]
+  },
+  "common_valid_n": 2007,
+  "delta_right_minus_left": {
+    "f1": 0.004713014226645135,
+    "mcc": 0.00725179871025218,
+    "precision": 0.0037620037620037655,
+    "recall": 0.004878048780487809
+  },
+  "excluded_invalid_pair_n": 267,
+  "left": "runs/reveal/test/baseline_whitening/2d1845eabf62eb84",
+  "note": "query bootstrap; repeated code/project dependence is not cluster-adjusted",
+  "right": "runs/reveal/test/h1_residual_local/98d7f32cd098d4c0"
+}

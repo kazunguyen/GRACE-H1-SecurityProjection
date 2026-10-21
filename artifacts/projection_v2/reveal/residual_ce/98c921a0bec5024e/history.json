@@ -1,0 +1,266 @@
+[
+  {
+    "accepted": true,
+    "balanced_anchor_draws": 32348,
+    "epoch": 1,
+    "geometry_loss": 0.0019394833473590969,
+    "local_loss": 1.7680344557429002,
+    "loss": 0.6245712141208217,
+    "retrieval": {
+      "classifier_mcc_proxy": 0.29608245028713953,
+      "macro_label_hit_at_5": 0.9096187761349646,
+      "macro_label_precision_at_5": 0.6306931242166443,
+      "per_class_label_precision_at_5": {
+        "0": 0.9265547877591314,
+        "1": 0.33483146067415726
+      },
+      "scope": "label relevance proxy in common top50; not LLM demonstration utility",
+      "teacher_top5_overlap": 0.9307622504537205,
+      "validation_queries": 2204
+    },
+    "semi_hard_active_fraction": 0.3314308458387564,
+    "semi_hard_loss": 0.10589494391091014
+  },
+  {
+    "accepted": true,
+    "balanced_anchor_draws": 32348,
+    "epoch": 2,
+    "geometry_loss": 0.0029818544048158153,
+    "local_loss": 1.7148951103797254,
+    "loss": 0.522588517088906,
+    "retrieval": {
+      "classifier_mcc_proxy": 0.3287623464908514,
+      "macro_label_hit_at_5": 0.9040007986068747,
+      "macro_label_precision_at_5": 0.6320635114300609,
+      "per_class_label_precision_at_5": {
+        "0": 0.9270483711747286,
+        "1": 0.33707865168539325
+      },
+      "scope": "label relevance proxy in common top50; not LLM demonstration utility",
+      "teacher_top5_overlap": 0.9318511796733211,
+      "validation_queries": 2204
+    },
+    "semi_hard_active_fraction": 0.3253176394176082,
+    "semi_hard_loss": 0.10703990346435063
+  },
+  {
+    "accepted": false,
+    "balanced_anchor_draws": 32348,
+    "epoch": 3,
+    "geometry_loss": 0.0032902455657959646,
+    "local_loss": 1.6833850070751242,
+    "loss": 0.4432203690599154,
+    "retrieval": {
+      "classifier_mcc_proxy": 0.35093149092414755,
+      "macro_label_hit_at_5": 0.8955738323147399,
+      "macro_label_precision_at_5": 0.6317978637266103,
+      "per_class_label_precision_at_5": {
+        "0": 0.9276406712734453,
+        "1": 0.3359550561797753
+      },
+      "scope": "label relevance proxy in common top50; not LLM demonstration utility",
+      "teacher_top5_overlap": 0.9319419237749547,
+      "validation_queries": 2204
+    },
+    "semi_hard_active_fraction": 0.32234991342289954,
+    "semi_hard_loss": 0.10685977193165197
+  },
+  {
+    "accepted": true,
+    "balanced_anchor_draws": 32348,
+    "epoch": 4,
+    "geometry_loss": 0.0033925651284219165,
+    "local_loss": 1.6491591366551723,
+    "loss": 0.3887387262156326,
+    "retrieval": {
+      "classifier_mcc_proxy": 0.35747850130198744,
+      "macro_label_hit_at_5": 0.88995585478665,
+      "macro_label_precision_at_5": 0.6348957928946172,
+      "per_class_label_precision_at_5": {
+        "0": 0.9315893385982231,
+        "1": 0.3382022471910112
+      },
+      "scope": "label relevance proxy in common top50; not LLM demonstration utility",
+      "teacher_top5_overlap": 0.935934664246824,
+      "validation_queries": 2204
+    },
+    "semi_hard_active_fraction": 0.31896098674677703,
+    "semi_hard_loss": 0.10603590363516152
+  },
+  {
+    "accepted": false,
+    "balanced_anchor_draws": 32348,
+    "epoch": 5,
+    "geometry_loss": 0.003458337476899675,
+    "local_loss": 1.6273961210038586,
+    "loss": 0.35086286021528956,
+    "retrieval": {
+      "classifier_mcc_proxy": 0.35253633146625246,
+      "macro_label_hit_at_5": 0.8787198997304702,
+      "macro_label_precision_at_5": 0.6342164224630367,
+      "per_class_label_precision_at_5": {
+        "0": 0.932477788746298,
+        "1": 0.3359550561797753
+      },
+      "scope": "label relevance proxy in common top50; not LLM demonstration utility",
+      "teacher_top5_overlap": 0.9316696914700543,
+      "validation_queries": 2204
+    },
+    "semi_hard_active_fraction": 0.31592370472969106,
+    "semi_hard_loss": 0.10604926036847924
+  },
+  {
+    "accepted": false,
+    "balanced_anchor_draws": 32348,
+    "epoch": 6,
+    "geometry_loss": 0.003476603392313987,
+    "local_loss": 1.5810500271199173,
+    "loss": 0.32425072186291254,
+    "retrieval": {
+      "classifier_mcc_proxy": 0.33367467822154667,
+      "macro_label_hit_at_5": 0.8702929334383354,
+      "macro_label_precision_at_5": 0.6311229299998892,
+      "per_class_label_precision_at_5": {
+        "0": 0.9341559723593288,
+        "1": 0.3280898876404495
+      },
+      "scope": "label relevance proxy in common top50; not LLM demonstration utility",
+      "teacher_top5_overlap": 0.9350272232304899,
+      "validation_queries": 2204
+    },
+    "semi_hard_active_fraction": 0.31656516634579185,
+    "semi_hard_loss": 0.10551121684913657
+  },
+  {
+    "accepted": false,
+    "balanced_anchor_draws": 32348,
+    "epoch": 7,
+    "geometry_loss": 0.00346418561531811,
+    "local_loss": 1.5965683470111969,
+    "loss": 0.30240809487201264,
+    "retrieval": {
+      "classifier_mcc_proxy": 0.32885882711485753,
+      "macro_label_hit_at_5": 0.8731019222023804,
+      "macro_label_precision_at_5": 0.6337156294020431,
+      "per_class_label_precision_at_5": {
+        "0": 0.9348469891411648,
+        "1": 0.3325842696629213
+      },
+      "scope": "label relevance proxy in common top50; not LLM demonstration utility",
+      "teacher_top5_overlap": 0.9318511796733211,
+      "validation_queries": 2204
+    },
+    "semi_hard_active_fraction": 0.3155140966873492,
+    "semi_hard_loss": 0.10446413223603696
+  },
+  {
+    "accepted": false,
+    "balanced_anchor_draws": 32348,
+    "epoch": 8,
+    "geometry_loss": 0.0034527161984454647,
+    "local_loss": 1.5757847828314921,
+    "loss": 0.28733957477887745,
+    "retrieval": {
+      "classifier_mcc_proxy": 0.32005529313589304,
+      "macro_label_hit_at_5": 0.8674839446742904,
+      "macro_label_precision_at_5": 0.6277826458289428,
+      "per_class_label_precision_at_5": {
+        "0": 0.9353405725567621,
+        "1": 0.3202247191011236
+      },
+      "scope": "label relevance proxy in common top50; not LLM demonstration utility",
+      "teacher_top5_overlap": 0.9309437386569872,
+      "validation_queries": 2204
+    },
+    "semi_hard_active_fraction": 0.31795242364656884,
+    "semi_hard_loss": 0.10445301990283055
+  },
+  {
+    "accepted": false,
+    "balanced_anchor_draws": 32348,
+    "epoch": 9,
+    "geometry_loss": 0.003419796359765949,
+    "local_loss": 1.553773875435218,
+    "loss": 0.27137003938332466,
+    "retrieval": {
+      "classifier_mcc_proxy": 0.29110581566940524,
+      "macro_label_hit_at_5": 0.8618659671462006,
+      "macro_label_precision_at_5": 0.6233376221480307,
+      "per_class_label_precision_at_5": {
+        "0": 0.9354392892398815,
+        "1": 0.3112359550561798
+      },
+      "scope": "label relevance proxy in common top50; not LLM demonstration utility",
+      "teacher_top5_overlap": 0.9335753176043556,
+      "validation_queries": 2204
+    },
+    "semi_hard_active_fraction": 0.31440506366034204,
+    "semi_hard_loss": 0.10435990504694763
+  },
+  {
+    "accepted": false,
+    "balanced_anchor_draws": 32348,
+    "epoch": 10,
+    "geometry_loss": 0.003357178052250239,
+    "local_loss": 1.5582902655106798,
+    "loss": 0.26033486814850915,
+    "retrieval": {
+      "classifier_mcc_proxy": 0.33656064356362697,
+      "macro_label_hit_at_5": 0.8646749559102455,
+      "macro_label_precision_at_5": 0.6266401943276728,
+      "per_class_label_precision_at_5": {
+        "0": 0.936426456071076,
+        "1": 0.31685393258426964
+      },
+      "scope": "label relevance proxy in common top50; not LLM demonstration utility",
+      "teacher_top5_overlap": 0.9337568058076225,
+      "validation_queries": 2204
+    },
+    "semi_hard_active_fraction": 0.3158773339707167,
+    "semi_hard_loss": 0.10362842867061767
+  },
+  {
+    "accepted": false,
+    "balanced_anchor_draws": 32348,
+    "epoch": 11,
+    "geometry_loss": 0.003290773157472109,
+    "local_loss": 1.5393076609869418,
+    "loss": 0.24770796527463956,
+    "retrieval": {
+      "classifier_mcc_proxy": 0.2903501260114761,
+      "macro_label_hit_at_5": 0.8534390008540657,
+      "macro_label_precision_at_5": 0.6223127433255321,
+      "per_class_label_precision_at_5": {
+        "0": 0.9356367226061204,
+        "1": 0.3089887640449438
+      },
+      "scope": "label relevance proxy in common top50; not LLM demonstration utility",
+      "teacher_top5_overlap": 0.9343012704174228,
+      "validation_queries": 2204
+    },
+    "semi_hard_active_fraction": 0.3167197354183041,
+    "semi_hard_loss": 0.10332519087410244
+  },
+  {
+    "accepted": false,
+    "balanced_anchor_draws": 32348,
+    "epoch": 12,
+    "geometry_loss": 0.0032793464316109304,
+    "local_loss": 1.5396161866715772,
+    "loss": 0.2377936897270314,
+    "retrieval": {
+      "classifier_mcc_proxy": 0.2945184806172154,
+      "macro_label_hit_at_5": 0.8506300120900208,
+      "macro_label_precision_at_5": 0.6215346562108321,
+      "per_class_label_precision_at_5": {
+        "0": 0.9363277393879565,
+        "1": 0.30674157303370786
+      },
+      "scope": "label relevance proxy in common top50; not LLM demonstration utility",
+      "teacher_top5_overlap": 0.92994555353902,
+      "validation_queries": 2204
+    },
+    "semi_hard_active_fraction": 0.3182576975503162,
+    "semi_hard_loss": 0.10321651211558218
+  }
+]

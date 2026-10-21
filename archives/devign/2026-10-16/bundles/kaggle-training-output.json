@@ -1,0 +1,23 @@
+{
+  "kernel": "quangdung1111/kaggle-train-projection-ipynb",
+  "downloaded_utc": "2026-10-15T15:27:41.589Z",
+  "bundle": "grace-h1-trained-heads.zip",
+  "bytes": 2959252,
+  "sha256": "c10fe71837d59a331105a9329c450705e210763d51fa2c9cffe3e2f23cba056f",
+  "files": 11,
+  "imported_to": "artifacts/heads/",
+  "status": "matching_heads_ready",
+  "heads": {
+    "devign": [
+      "ce",
+      "supcon_hard"
+    ]
+  },
+  "checks": [
+    "archive member checksums",
+    "training config fingerprint",
+    "dataset identity",
+    "training source hashes",
+    "projection weights checksum"
+  ]
+}

@@ -1,0 +1,32 @@
+{
+  "bootstrap_repetitions": 1000,
+  "ci95_query_bootstrap": {
+    "f1": [
+      -0.029991025376855506,
+      0.0012248143540481051
+    ],
+    "mcc": [
+      -0.051260810709317844,
+      -0.009035736117492449
+    ],
+    "precision": [
+      -0.04536714885779902,
+      -0.008761080975809982
+    ],
+    "recall": [
+      -0.02301873370782389,
+      0.0054224691004614075
+    ]
+  },
+  "common_valid_n": 2732,
+  "delta_right_minus_left": {
+    "f1": -0.014059566876350238,
+    "mcc": -0.030656958313920422,
+    "precision": -0.02699757661908392,
+    "recall": -0.008764940239043784
+  },
+  "excluded_invalid_pair_n": 0,
+  "left": "runs/devign/test/baseline_whitening/9afe3268729648c6",
+  "note": "query bootstrap; repeated code/project dependence is not cluster-adjusted",
+  "right": "runs/devign/test/h1_supcon_hard/7c4a52705268af6f"
+}

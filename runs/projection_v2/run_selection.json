@@ -1,0 +1,69 @@
+{
+  "experiment_config": {
+    "allow_identity_fallback_run": false,
+    "bootstrap": 1000,
+    "datasets": [
+      "reveal"
+    ],
+    "inference_workers": 4,
+    "llm_arms": [
+      "baseline_whitening",
+      "h1_residual_local"
+    ],
+    "objectives": [
+      "residual_ce",
+      "residual_local"
+    ],
+    "pipeline": {
+      "graph_workers": 3,
+      "joern_home": null,
+      "lexical_weight": 0.7,
+      "semantic_top_k": 5,
+      "whitening_dimension": 256
+    },
+    "splits": [
+      "test"
+    ],
+    "test_protocol_frozen": true,
+    "training": {
+      "batch_size": 128,
+      "device": "auto",
+      "dimension": 256,
+      "dropout": 0.1,
+      "epochs": 30,
+      "geometry_weight": 1.0,
+      "hard_ramp_epochs": 5,
+      "hard_warmup_epochs": 3,
+      "hidden_dimension": 256,
+      "learning_rate": 0.0003,
+      "local_weight": 0.1,
+      "margin": 0.2,
+      "negative_neighbors": 32,
+      "negatives_per_anchor": 8,
+      "patience": 8,
+      "positive_neighbors": 8,
+      "residual_radius": 0.25,
+      "seed": 42,
+      "selection_max_class_drop": 0.02,
+      "selection_min_gain": 0.002,
+      "selection_min_teacher_overlap": 0.5,
+      "semi_hard_weight": 0.05,
+      "temperature": 0.1,
+      "weight_decay": 0.001
+    }
+  },
+  "runs": [
+    {
+      "arm": "baseline_whitening",
+      "dataset": "reveal",
+      "path": "runs/reveal/test/baseline_whitening/2d1845eabf62eb84",
+      "split": "test"
+    },
+    {
+      "arm": "h1_residual_local",
+      "dataset": "reveal",
+      "path": "runs/reveal/test/h1_residual_local/98d7f32cd098d4c0",
+      "split": "test"
+    }
+  ]
+}

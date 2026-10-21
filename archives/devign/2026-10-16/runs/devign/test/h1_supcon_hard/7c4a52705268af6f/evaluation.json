@@ -1,0 +1,72 @@
+{
+  "accuracy_all": 0.5322108345534406,
+  "accuracy_valid_only": 0.5322108345534406,
+  "balanced_accuracy": 0.5122146485149449,
+  "confusion_matrix_valid_only": {
+    "fn": 921,
+    "fp": 357,
+    "tn": 1120,
+    "tp": 334
+  },
+  "f1": 0.3432682425488181,
+  "invalid_n": 0,
+  "invalid_positive_n": 0,
+  "invalid_rate": 0.0,
+  "mcc": 0.028006739670925387,
+  "metric_scope": "binary metrics condition on valid labels; invalids retained and reported separately",
+  "n": 2732,
+  "precision": 0.4833574529667149,
+  "predicted_positive_rate_all": 0.2529282576866764,
+  "prediction_sha256": "605bae75b97547d32e455d6f565d2acabe300f36d177d328b7bada738b5c9e0d",
+  "recall": 0.2661354581673307,
+  "recall_all_positives": 0.2661354581673307,
+  "trivial_baselines": {
+    "always_safe": {
+      "accuracy_all": 0.5406295754026355,
+      "accuracy_valid_only": 0.5406295754026355,
+      "balanced_accuracy": 0.5,
+      "confusion_matrix_valid_only": {
+        "fn": 1255,
+        "fp": 0,
+        "tn": 1477,
+        "tp": 0
+      },
+      "f1": 0.0,
+      "invalid_n": 0,
+      "invalid_positive_n": 0,
+      "invalid_rate": 0.0,
+      "mcc": 0.0,
+      "metric_scope": "binary metrics condition on valid labels; invalids retained and reported separately",
+      "n": 2732,
+      "precision": 0.0,
+      "predicted_positive_rate_all": 0.0,
+      "recall": 0.0,
+      "recall_all_positives": 0.0,
+      "valid_n": 2732
+    },
+    "always_vulnerable": {
+      "accuracy_all": 0.45937042459736455,
+      "accuracy_valid_only": 0.45937042459736455,
+      "balanced_accuracy": 0.5,
+      "confusion_matrix_valid_only": {
+        "fn": 0,
+        "fp": 1477,
+        "tn": 0,
+        "tp": 1255
+      },
+      "f1": 0.6295460245798845,
+      "invalid_n": 0,
+      "invalid_positive_n": 0,
+      "invalid_rate": 0.0,
+      "mcc": 0.0,
+      "metric_scope": "binary metrics condition on valid labels; invalids retained and reported separately",
+      "n": 2732,
+      "precision": 0.45937042459736455,
+      "predicted_positive_rate_all": 1.0,
+      "recall": 1.0,
+      "recall_all_positives": 1.0,
+      "valid_n": 2732
+    }
+  },
+  "valid_n": 2732
+}

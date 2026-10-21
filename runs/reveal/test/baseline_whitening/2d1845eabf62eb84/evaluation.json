@@ -1,0 +1,72 @@
+{
+  "accuracy_all": 0.6860158311345647,
+  "accuracy_valid_only": 0.6896551724137931,
+  "balanced_accuracy": 0.5251043373851108,
+  "confusion_matrix_valid_only": {
+    "fn": 156,
+    "fp": 546,
+    "tn": 1487,
+    "tp": 73
+  },
+  "f1": 0.17216981132075473,
+  "invalid_n": 12,
+  "invalid_positive_n": 1,
+  "invalid_rate": 0.005277044854881266,
+  "mcc": 0.03397043301883586,
+  "metric_scope": "binary metrics condition on valid labels; invalids retained and reported separately",
+  "n": 2274,
+  "precision": 0.11793214862681745,
+  "predicted_positive_rate_all": 0.272207563764292,
+  "prediction_sha256": "a528bd610809f5fa8cc04dd42afbbcc8a1c0d8de80f880939c8601e014507ee8",
+  "recall": 0.31877729257641924,
+  "recall_all_positives": 0.3173913043478261,
+  "trivial_baselines": {
+    "always_safe": {
+      "accuracy_all": 0.8988566402814424,
+      "accuracy_valid_only": 0.8988566402814424,
+      "balanced_accuracy": 0.5,
+      "confusion_matrix_valid_only": {
+        "fn": 230,
+        "fp": 0,
+        "tn": 2044,
+        "tp": 0
+      },
+      "f1": 0.0,
+      "invalid_n": 0,
+      "invalid_positive_n": 0,
+      "invalid_rate": 0.0,
+      "mcc": 0.0,
+      "metric_scope": "binary metrics condition on valid labels; invalids retained and reported separately",
+      "n": 2274,
+      "precision": 0.0,
+      "predicted_positive_rate_all": 0.0,
+      "recall": 0.0,
+      "recall_all_positives": 0.0,
+      "valid_n": 2274
+    },
+    "always_vulnerable": {
+      "accuracy_all": 0.1011433597185576,
+      "accuracy_valid_only": 0.1011433597185576,
+      "balanced_accuracy": 0.5,
+      "confusion_matrix_valid_only": {
+        "fn": 0,
+        "fp": 2044,
+        "tn": 0,
+        "tp": 230
+      },
+      "f1": 0.18370607028753994,
+      "invalid_n": 0,
+      "invalid_positive_n": 0,
+      "invalid_rate": 0.0,
+      "mcc": 0.0,
+      "metric_scope": "binary metrics condition on valid labels; invalids retained and reported separately",
+      "n": 2274,
+      "precision": 0.1011433597185576,
+      "predicted_positive_rate_all": 1.0,
+      "recall": 1.0,
+      "recall_all_positives": 1.0,
+      "valid_n": 2274
+    }
+  },
+  "valid_n": 2262
+}

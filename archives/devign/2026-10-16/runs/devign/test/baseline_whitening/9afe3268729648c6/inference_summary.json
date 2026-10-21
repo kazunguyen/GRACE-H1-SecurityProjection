@@ -1,0 +1,40 @@
+{
+  "api_attempts_this_run": 569,
+  "cached_queries": 2162,
+  "imported_prior_responses": 0,
+  "new_request_latency_p50_p95_seconds": [
+    0.8903233390010428,
+    4.472065398393898
+  ],
+  "new_unique_requests": 569,
+  "predictions_sha256": "a21ea167785bae93acfa9cbf986470445e89c60a94ef78cdf08cd21a1d6ae43f",
+  "provider_usage_new_requests": {
+    "candidates_token_count": 1138,
+    "prompt_token_count": 1853075,
+    "total_token_count": 1854213
+  },
+  "queries": 2732,
+  "request_error_queries": 0,
+  "request_spec": {
+    "inference": {
+      "max_tokens": 256,
+      "parser": "../Grace-with-filters-v2/[CONTRACT]/parser/parse_prediction.py::parse_prediction",
+      "parser_contract": "exact_last_line_binary_v1",
+      "retry_policy": "max_attempts=5; exponential_backoff=5s..120s; exhausted_request=invalid",
+      "seed": 42,
+      "temperature": 0.0
+    },
+    "model": "publishers/qwen/models/qwen3-coder-480b-a35b-instruct-maas",
+    "provider": "Vertex AI"
+  },
+  "status": "complete",
+  "unique_prompts": 2731,
+  "usage_available_new_requests": 569,
+  "usage_coverage_per_field": {
+    "candidates_token_count": 569,
+    "prompt_token_count": 569,
+    "total_token_count": 569
+  },
+  "wall_seconds": 269.06422257500526,
+  "worst_case_attempts": 2845
+}

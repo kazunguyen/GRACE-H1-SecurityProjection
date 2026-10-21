@@ -1,0 +1,333 @@
+{
+  "comparisons": [
+    {
+      "bootstrap_repetitions": 1000,
+      "ci95_query_bootstrap": {
+        "f1": [
+          -0.006948809752799478,
+          0.00204117755052251
+        ],
+        "mcc": [
+          -0.009390603238432098,
+          0.0034991245470859266
+        ],
+        "precision": [
+          -0.004567386189098133,
+          0.001894464141464849
+        ],
+        "recall": [
+          -0.01492912322808069,
+          0.0
+        ]
+      },
+      "common_valid_n": 2253,
+      "delta_right_minus_left": {
+        "f1": -0.0013528856853961546,
+        "mcc": -0.0015538431436159308,
+        "precision": -0.0006673658118028364,
+        "recall": -0.0044052863436123135
+      },
+      "excluded_invalid_pair_n": 21,
+      "left": "runs/reveal/test/baseline_whitening/2d1845eabf62eb84",
+      "note": "query bootstrap; repeated code/project dependence is not cluster-adjusted",
+      "right": "runs/reveal/test/h1_residual_local/98d7f32cd098d4c0"
+    }
+  ],
+  "experiment": {
+    "allow_identity_fallback_run": false,
+    "bootstrap": 1000,
+    "datasets": [
+      "reveal"
+    ],
+    "inference_workers": 4,
+    "llm_arms": [
+      "baseline_whitening",
+      "h1_residual_local"
+    ],
+    "objectives": [
+      "residual_ce",
+      "residual_local"
+    ],
+    "pipeline": {
+      "graph_workers": 3,
+      "joern_home": null,
+      "lexical_weight": 0.7,
+      "semantic_top_k": 5,
+      "whitening_dimension": 256
+    },
+    "splits": [
+      "test"
+    ],
+    "test_protocol_frozen": true,
+    "training": {
+      "batch_size": 128,
+      "device": "auto",
+      "dimension": 256,
+      "dropout": 0.1,
+      "epochs": 30,
+      "geometry_weight": 1.0,
+      "hard_ramp_epochs": 5,
+      "hard_warmup_epochs": 3,
+      "hidden_dimension": 256,
+      "learning_rate": 0.0003,
+      "local_weight": 0.1,
+      "margin": 0.2,
+      "negative_neighbors": 32,
+      "negatives_per_anchor": 8,
+      "patience": 8,
+      "positive_neighbors": 8,
+      "residual_radius": 0.25,
+      "seed": 42,
+      "selection_max_class_drop": 0.02,
+      "selection_min_gain": 0.002,
+      "selection_min_teacher_overlap": 0.5,
+      "semi_hard_weight": 0.05,
+      "temperature": 0.1,
+      "weight_decay": 0.001
+    }
+  },
+  "note": "Validation retrieval proxy gain is not a full GRACE quality claim.",
+  "scores": [
+    {
+      "arm": "baseline_whitening",
+      "dataset": "reveal",
+      "inference": {
+        "api_attempts_this_run": 286,
+        "cached_queries": 2125,
+        "force_fresh": false,
+        "imported_prior_responses": 0,
+        "new_request_latency_p50_p95_seconds": [
+          1.0711154924938455,
+          78.10062542204832
+        ],
+        "new_unique_requests": 148,
+        "predictions_sha256": "a528bd610809f5fa8cc04dd42afbbcc8a1c0d8de80f880939c8601e014507ee8",
+        "provider_usage_new_requests": {
+          "candidates_token_count": 272,
+          "prompt_token_count": 426044,
+          "total_token_count": 426316
+        },
+        "queries": 2274,
+        "request_error_queries": 12,
+        "request_spec": {
+          "inference": {
+            "max_tokens": 256,
+            "parser": "../Grace-with-filters-v2/[CONTRACT]/parser/parse_prediction.py::parse_prediction",
+            "parser_contract": "exact_last_line_binary_v1",
+            "retry_policy": "max_attempts=5; exponential_backoff=5s..120s; exhausted_request=invalid",
+            "seed": 42,
+            "temperature": 0.0
+          },
+          "model": "publishers/qwen/models/qwen3-coder-480b-a35b-instruct-maas",
+          "provider": "Vertex AI"
+        },
+        "retry_exhausted_only": true,
+        "status": "partial_request_errors",
+        "unique_prompts": 2270,
+        "usage_available_new_requests": 136,
+        "usage_coverage_per_field": {
+          "candidates_token_count": 136,
+          "prompt_token_count": 136,
+          "total_token_count": 136
+        },
+        "wall_seconds": 529.5457795810071,
+        "worst_case_attempts": 740
+      },
+      "metrics": {
+        "accuracy_all": 0.6860158311345647,
+        "accuracy_valid_only": 0.6896551724137931,
+        "balanced_accuracy": 0.5251043373851108,
+        "confusion_matrix_valid_only": {
+          "fn": 156,
+          "fp": 546,
+          "tn": 1487,
+          "tp": 73
+        },
+        "f1": 0.17216981132075473,
+        "invalid_n": 12,
+        "invalid_positive_n": 1,
+        "invalid_rate": 0.005277044854881266,
+        "mcc": 0.03397043301883586,
+        "metric_scope": "binary metrics condition on valid labels; invalids retained and reported separately",
+        "n": 2274,
+        "precision": 0.11793214862681745,
+        "predicted_positive_rate_all": 0.272207563764292,
+        "prediction_sha256": "a528bd610809f5fa8cc04dd42afbbcc8a1c0d8de80f880939c8601e014507ee8",
+        "recall": 0.31877729257641924,
+        "recall_all_positives": 0.3173913043478261,
+        "trivial_baselines": {
+          "always_safe": {
+            "accuracy_all": 0.8988566402814424,
+            "accuracy_valid_only": 0.8988566402814424,
+            "balanced_accuracy": 0.5,
+            "confusion_matrix_valid_only": {
+              "fn": 230,
+              "fp": 0,
+              "tn": 2044,
+              "tp": 0
+            },
+            "f1": 0.0,
+            "invalid_n": 0,
+            "invalid_positive_n": 0,
+            "invalid_rate": 0.0,
+            "mcc": 0.0,
+            "metric_scope": "binary metrics condition on valid labels; invalids retained and reported separately",
+            "n": 2274,
+            "precision": 0.0,
+            "predicted_positive_rate_all": 0.0,
+            "recall": 0.0,
+            "recall_all_positives": 0.0,
+            "valid_n": 2274
+          },
+          "always_vulnerable": {
+            "accuracy_all": 0.1011433597185576,
+            "accuracy_valid_only": 0.1011433597185576,
+            "balanced_accuracy": 0.5,
+            "confusion_matrix_valid_only": {
+              "fn": 0,
+              "fp": 2044,
+              "tn": 0,
+              "tp": 230
+            },
+            "f1": 0.18370607028753994,
+            "invalid_n": 0,
+            "invalid_positive_n": 0,
+            "invalid_rate": 0.0,
+            "mcc": 0.0,
+            "metric_scope": "binary metrics condition on valid labels; invalids retained and reported separately",
+            "n": 2274,
+            "precision": 0.1011433597185576,
+            "predicted_positive_rate_all": 1.0,
+            "recall": 1.0,
+            "recall_all_positives": 1.0,
+            "valid_n": 2274
+          }
+        },
+        "valid_n": 2262
+      },
+      "path": "runs/reveal/test/baseline_whitening/2d1845eabf62eb84",
+      "split": "test"
+    },
+    {
+      "arm": "h1_residual_local",
+      "dataset": "reveal",
+      "inference": {
+        "api_attempts_this_run": 245,
+        "cached_queries": 2144,
+        "force_fresh": false,
+        "imported_prior_responses": 0,
+        "new_request_latency_p50_p95_seconds": [
+          0.9101295580039732,
+          77.60144167159305
+        ],
+        "new_unique_requests": 128,
+        "predictions_sha256": "0d1c057d401f60ba4429df33366d2f61135b6d2093dae011e48e75186f959fc0",
+        "provider_usage_new_requests": {
+          "candidates_token_count": 238,
+          "prompt_token_count": 348682,
+          "total_token_count": 348920
+        },
+        "queries": 2274,
+        "request_error_queries": 9,
+        "request_spec": {
+          "inference": {
+            "max_tokens": 256,
+            "parser": "../Grace-with-filters-v2/[CONTRACT]/parser/parse_prediction.py::parse_prediction",
+            "parser_contract": "exact_last_line_binary_v1",
+            "retry_policy": "max_attempts=5; exponential_backoff=5s..120s; exhausted_request=invalid",
+            "seed": 42,
+            "temperature": 0.0
+          },
+          "model": "publishers/qwen/models/qwen3-coder-480b-a35b-instruct-maas",
+          "provider": "Vertex AI"
+        },
+        "retry_exhausted_only": true,
+        "status": "partial_request_errors",
+        "unique_prompts": 2270,
+        "usage_available_new_requests": 119,
+        "usage_coverage_per_field": {
+          "candidates_token_count": 119,
+          "prompt_token_count": 119,
+          "total_token_count": 119
+        },
+        "wall_seconds": 461.1425707550079,
+        "worst_case_attempts": 640
+      },
+      "metrics": {
+        "accuracy_all": 0.6886543535620053,
+        "accuracy_valid_only": 0.6913907284768211,
+        "balanced_accuracy": 0.5265580187582357,
+        "confusion_matrix_valid_only": {
+          "fn": 155,
+          "fp": 544,
+          "tn": 1493,
+          "tp": 73
+        },
+        "f1": 0.1727810650887574,
+        "invalid_n": 9,
+        "invalid_positive_n": 2,
+        "invalid_rate": 0.00395778364116095,
+        "mcc": 0.035897765917342075,
+        "metric_scope": "binary metrics condition on valid labels; invalids retained and reported separately",
+        "n": 2274,
+        "precision": 0.11831442463533225,
+        "predicted_positive_rate_all": 0.27132805628847845,
+        "prediction_sha256": "0d1c057d401f60ba4429df33366d2f61135b6d2093dae011e48e75186f959fc0",
+        "recall": 0.3201754385964912,
+        "recall_all_positives": 0.3173913043478261,
+        "trivial_baselines": {
+          "always_safe": {
+            "accuracy_all": 0.8988566402814424,
+            "accuracy_valid_only": 0.8988566402814424,
+            "balanced_accuracy": 0.5,
+            "confusion_matrix_valid_only": {
+              "fn": 230,
+              "fp": 0,
+              "tn": 2044,
+              "tp": 0
+            },
+            "f1": 0.0,
+            "invalid_n": 0,
+            "invalid_positive_n": 0,
+            "invalid_rate": 0.0,
+            "mcc": 0.0,
+            "metric_scope": "binary metrics condition on valid labels; invalids retained and reported separately",
+            "n": 2274,
+            "precision": 0.0,
+            "predicted_positive_rate_all": 0.0,
+            "recall": 0.0,
+            "recall_all_positives": 0.0,
+            "valid_n": 2274
+          },
+          "always_vulnerable": {
+            "accuracy_all": 0.1011433597185576,
+            "accuracy_valid_only": 0.1011433597185576,
+            "balanced_accuracy": 0.5,
+            "confusion_matrix_valid_only": {
+              "fn": 0,
+              "fp": 2044,
+              "tn": 0,
+              "tp": 230
+            },
+            "f1": 0.18370607028753994,
+            "invalid_n": 0,
+            "invalid_positive_n": 0,
+            "invalid_rate": 0.0,
+            "mcc": 0.0,
+            "metric_scope": "binary metrics condition on valid labels; invalids retained and reported separately",
+            "n": 2274,
+            "precision": 0.1011433597185576,
+            "predicted_positive_rate_all": 1.0,
+            "recall": 1.0,
+            "recall_all_positives": 1.0,
+            "valid_n": 2274
+          }
+        },
+        "valid_n": 2265
+      },
+      "path": "runs/reveal/test/h1_residual_local/98d7f32cd098d4c0",
+      "split": "test"
+    }
+  ],
+  "status": "partial"
+}

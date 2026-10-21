@@ -1,0 +1,16 @@
+{
+  "epoch": 2,
+  "retrieval": {
+    "classifier_mcc_proxy": 0.3512239784918918,
+    "macro_label_hit_at_5": 0.9096187761349646,
+    "macro_label_precision_at_5": 0.6365578934525329,
+    "per_class_label_precision_at_5": {
+      "0": 0.9270483711747286,
+      "1": 0.34606741573033706
+    },
+    "scope": "label relevance proxy in common top50; not LLM demonstration utility",
+    "teacher_top5_overlap": 0.9295825771324863,
+    "validation_queries": 2204
+  },
+  "selection_status": "validation_proxy_gain"
+}

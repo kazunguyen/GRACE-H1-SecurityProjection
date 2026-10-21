@@ -1,0 +1,28 @@
+{
+  "attempts": 5,
+  "elapsed_seconds": 78.47031518799486,
+  "prompt_sha256": "f725b53eb4193cc6c173edb98c2989f7b0b6ee6d6f967705d45c64faf738dbf0",
+  "raw_response": "0",
+  "raw_response_sha256": "5feceb66ffc86f38d952786c6d696c79c2dbc239dd4e91b46729d73a27fb57e9",
+  "request_error": null,
+  "request_key": "f8b6b387b99950a3ecc80464de6e0482b726899a194020510644c15830855026",
+  "request_spec": {
+    "inference": {
+      "max_tokens": 256,
+      "parser": "../Grace-with-filters-v2/[CONTRACT]/parser/parse_prediction.py::parse_prediction",
+      "parser_contract": "exact_last_line_binary_v1",
+      "retry_policy": "max_attempts=5; exponential_backoff=5s..120s; exhausted_request=invalid",
+      "seed": 42,
+      "temperature": 0.0
+    },
+    "model": "publishers/qwen/models/qwen3-coder-480b-a35b-instruct-maas",
+    "provider": "Vertex AI"
+  },
+  "request_status": "ok",
+  "source": "new_api",
+  "usage": {
+    "candidates_token_count": 2,
+    "prompt_token_count": 3677,
+    "total_token_count": 3679
+  }
+}

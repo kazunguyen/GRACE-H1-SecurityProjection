@@ -1,0 +1,515 @@
+[
+  {
+    "epoch": 1,
+    "loss": 1.3513152093399141,
+    "validation": {
+      "accuracy_all": 0.5848017621145375,
+      "accuracy_valid_only": 0.5848017621145375,
+      "balanced_accuracy": 0.5817359161109161,
+      "confusion_matrix_valid_only": {
+        "fn": 523,
+        "fp": 608,
+        "tn": 932,
+        "tp": 661
+      },
+      "f1": 0.5389319200978393,
+      "invalid_n": 0,
+      "invalid_positive_n": 0,
+      "invalid_rate": 0.0,
+      "mcc": 0.16244892217338316,
+      "metric_scope": "binary metrics condition on valid labels; invalids retained and reported separately",
+      "n": 2724,
+      "precision": 0.5208825847123719,
+      "predicted_positive_rate_all": 0.4658590308370044,
+      "recall": 0.558277027027027,
+      "recall_all_positives": 0.558277027027027,
+      "valid_n": 2724
+    }
+  },
+  {
+    "epoch": 2,
+    "loss": 1.3130530762043566,
+    "validation": {
+      "accuracy_all": 0.5781938325991189,
+      "accuracy_valid_only": 0.5781938325991189,
+      "balanced_accuracy": 0.5756965163215163,
+      "confusion_matrix_valid_only": {
+        "fn": 525,
+        "fp": 624,
+        "tn": 916,
+        "tp": 659
+      },
+      "f1": 0.5342521280907985,
+      "invalid_n": 0,
+      "invalid_positive_n": 0,
+      "invalid_rate": 0.0,
+      "mcc": 0.15034769757235641,
+      "metric_scope": "binary metrics condition on valid labels; invalids retained and reported separately",
+      "n": 2724,
+      "precision": 0.5136399064692128,
+      "predicted_positive_rate_all": 0.4709985315712188,
+      "recall": 0.5565878378378378,
+      "recall_all_positives": 0.5565878378378378,
+      "valid_n": 2724
+    }
+  },
+  {
+    "epoch": 3,
+    "loss": 1.2923544828051012,
+    "validation": {
+      "accuracy_all": 0.5969162995594713,
+      "accuracy_valid_only": 0.5969162995594713,
+      "balanced_accuracy": 0.5946955071955072,
+      "confusion_matrix_valid_only": {
+        "fn": 500,
+        "fp": 598,
+        "tn": 942,
+        "tp": 684
+      },
+      "f1": 0.5547445255474452,
+      "invalid_n": 0,
+      "invalid_positive_n": 0,
+      "invalid_rate": 0.0,
+      "mcc": 0.18809139999850538,
+      "metric_scope": "binary metrics condition on valid labels; invalids retained and reported separately",
+      "n": 2724,
+      "precision": 0.5335413416536662,
+      "predicted_positive_rate_all": 0.47063142437591776,
+      "recall": 0.5777027027027027,
+      "recall_all_positives": 0.5777027027027027,
+      "valid_n": 2724
+    }
+  },
+  {
+    "epoch": 4,
+    "loss": 1.2753186428900776,
+    "validation": {
+      "accuracy_all": 0.5877386196769456,
+      "accuracy_valid_only": 0.5877386196769456,
+      "balanced_accuracy": 0.5896049052299053,
+      "confusion_matrix_valid_only": {
+        "fn": 469,
+        "fp": 654,
+        "tn": 886,
+        "tp": 715
+      },
+      "f1": 0.5601253427340384,
+      "invalid_n": 0,
+      "invalid_positive_n": 0,
+      "invalid_rate": 0.0,
+      "mcc": 0.17767512123187573,
+      "metric_scope": "binary metrics condition on valid labels; invalids retained and reported separately",
+      "n": 2724,
+      "precision": 0.5222790357925493,
+      "predicted_positive_rate_all": 0.5025697503671072,
+      "recall": 0.6038851351351351,
+      "recall_all_positives": 0.6038851351351351,
+      "valid_n": 2724
+    }
+  },
+  {
+    "epoch": 5,
+    "loss": 1.2589274415164822,
+    "validation": {
+      "accuracy_all": 0.6027900146842878,
+      "accuracy_valid_only": 0.6027900146842878,
+      "balanced_accuracy": 0.6031118374868375,
+      "confusion_matrix_valid_only": {
+        "fn": 467,
+        "fp": 615,
+        "tn": 925,
+        "tp": 717
+      },
+      "f1": 0.5699523052464229,
+      "invalid_n": 0,
+      "invalid_positive_n": 0,
+      "invalid_rate": 0.0,
+      "mcc": 0.20450456337084638,
+      "metric_scope": "binary metrics condition on valid labels; invalids retained and reported separately",
+      "n": 2724,
+      "precision": 0.5382882882882883,
+      "predicted_positive_rate_all": 0.4889867841409692,
+      "recall": 0.6055743243243243,
+      "recall_all_positives": 0.6055743243243243,
+      "valid_n": 2724
+    }
+  },
+  {
+    "epoch": 6,
+    "loss": 1.2482103544959535,
+    "validation": {
+      "accuracy_all": 0.606093979441997,
+      "accuracy_valid_only": 0.606093979441997,
+      "balanced_accuracy": 0.6059362934362934,
+      "confusion_matrix_valid_only": {
+        "fn": 468,
+        "fp": 605,
+        "tn": 935,
+        "tp": 716
+      },
+      "f1": 0.5716566866267464,
+      "invalid_n": 0,
+      "invalid_positive_n": 0,
+      "invalid_rate": 0.0,
+      "mcc": 0.2101506494360026,
+      "metric_scope": "binary metrics condition on valid labels; invalids retained and reported separately",
+      "n": 2724,
+      "precision": 0.5420136260408781,
+      "predicted_positive_rate_all": 0.48494860499265785,
+      "recall": 0.6047297297297297,
+      "recall_all_positives": 0.6047297297297297,
+      "valid_n": 2724
+    }
+  },
+  {
+    "epoch": 7,
+    "loss": 1.2418674041644011,
+    "validation": {
+      "accuracy_all": 0.6035242290748899,
+      "accuracy_valid_only": 0.6035242290748899,
+      "balanced_accuracy": 0.5993681993681994,
+      "confusion_matrix_valid_only": {
+        "fn": 512,
+        "fp": 568,
+        "tn": 972,
+        "tp": 672
+      },
+      "f1": 0.5544554455445545,
+      "invalid_n": 0,
+      "invalid_positive_n": 0,
+      "invalid_rate": 0.0,
+      "mcc": 0.1978271226596675,
+      "metric_scope": "binary metrics condition on valid labels; invalids retained and reported separately",
+      "n": 2724,
+      "precision": 0.5419354838709678,
+      "predicted_positive_rate_all": 0.4552129221732746,
+      "recall": 0.5675675675675675,
+      "recall_all_positives": 0.5675675675675675,
+      "valid_n": 2724
+    }
+  },
+  {
+    "epoch": 8,
+    "loss": 1.2380587032021828,
+    "validation": {
+      "accuracy_all": 0.5994860499265786,
+      "accuracy_valid_only": 0.5994860499265786,
+      "balanced_accuracy": 0.5998968936468936,
+      "confusion_matrix_valid_only": {
+        "fn": 470,
+        "fp": 621,
+        "tn": 919,
+        "tp": 714
+      },
+      "f1": 0.5668916236601826,
+      "invalid_n": 0,
+      "invalid_positive_n": 0,
+      "invalid_rate": 0.0,
+      "mcc": 0.1981191405606217,
+      "metric_scope": "binary metrics condition on valid labels; invalids retained and reported separately",
+      "n": 2724,
+      "precision": 0.5348314606741573,
+      "predicted_positive_rate_all": 0.4900881057268722,
+      "recall": 0.6030405405405406,
+      "recall_all_positives": 0.6030405405405406,
+      "valid_n": 2724
+    }
+  },
+  {
+    "epoch": 9,
+    "loss": 1.2295976044631882,
+    "validation": {
+      "accuracy_all": 0.6035242290748899,
+      "accuracy_valid_only": 0.6035242290748899,
+      "balanced_accuracy": 0.6061041154791155,
+      "confusion_matrix_valid_only": {
+        "fn": 443,
+        "fp": 637,
+        "tn": 903,
+        "tp": 741
+      },
+      "f1": 0.5784543325526932,
+      "invalid_n": 0,
+      "invalid_positive_n": 0,
+      "invalid_rate": 0.0,
+      "mcc": 0.210402694774657,
+      "metric_scope": "binary metrics condition on valid labels; invalids retained and reported separately",
+      "n": 2724,
+      "precision": 0.5377358490566038,
+      "predicted_positive_rate_all": 0.5058737151248165,
+      "recall": 0.6258445945945946,
+      "recall_all_positives": 0.6258445945945946,
+      "valid_n": 2724
+    }
+  },
+  {
+    "epoch": 10,
+    "loss": 1.2272226775396988,
+    "validation": {
+      "accuracy_all": 0.6075624082232012,
+      "accuracy_valid_only": 0.6075624082232012,
+      "balanced_accuracy": 0.6018657862407862,
+      "confusion_matrix_valid_only": {
+        "fn": 523,
+        "fp": 546,
+        "tn": 994,
+        "tp": 661
+      },
+      "f1": 0.5529067335842743,
+      "invalid_n": 0,
+      "invalid_positive_n": 0,
+      "invalid_rate": 0.0,
+      "mcc": 0.20330502986505425,
+      "metric_scope": "binary metrics condition on valid labels; invalids retained and reported separately",
+      "n": 2724,
+      "precision": 0.5476387738193869,
+      "predicted_positive_rate_all": 0.4430983847283407,
+      "recall": 0.558277027027027,
+      "recall_all_positives": 0.558277027027027,
+      "valid_n": 2724
+    }
+  },
+  {
+    "epoch": 11,
+    "loss": 1.2219953076134555,
+    "validation": {
+      "accuracy_all": 0.6079295154185022,
+      "accuracy_valid_only": 0.6079295154185022,
+      "balanced_accuracy": 0.6068763162513162,
+      "confusion_matrix_valid_only": {
+        "fn": 475,
+        "fp": 593,
+        "tn": 947,
+        "tp": 709
+      },
+      "f1": 0.5703942075623492,
+      "invalid_n": 0,
+      "invalid_positive_n": 0,
+      "invalid_rate": 0.0,
+      "mcc": 0.212125262790878,
+      "metric_scope": "binary metrics condition on valid labels; invalids retained and reported separately",
+      "n": 2724,
+      "precision": 0.5445468509984639,
+      "predicted_positive_rate_all": 0.4779735682819383,
+      "recall": 0.5988175675675675,
+      "recall_all_positives": 0.5988175675675675,
+      "valid_n": 2724
+    }
+  },
+  {
+    "epoch": 12,
+    "loss": 1.2201993050639677,
+    "validation": {
+      "accuracy_all": 0.5950807635829662,
+      "accuracy_valid_only": 0.5950807635829662,
+      "balanced_accuracy": 0.5907292032292033,
+      "confusion_matrix_valid_only": {
+        "fn": 524,
+        "fp": 579,
+        "tn": 961,
+        "tp": 660
+      },
+      "f1": 0.5447791993396616,
+      "invalid_n": 0,
+      "invalid_positive_n": 0,
+      "invalid_rate": 0.0,
+      "mcc": 0.1806402078292474,
+      "metric_scope": "binary metrics condition on valid labels; invalids retained and reported separately",
+      "n": 2724,
+      "precision": 0.5326876513317191,
+      "predicted_positive_rate_all": 0.45484581497797355,
+      "recall": 0.5574324324324325,
+      "recall_all_positives": 0.5574324324324325,
+      "valid_n": 2724
+    }
+  },
+  {
+    "epoch": 13,
+    "loss": 1.2187575546655023,
+    "validation": {
+      "accuracy_all": 0.6119676945668135,
+      "accuracy_valid_only": 0.6119676945668135,
+      "balanced_accuracy": 0.6120096963846964,
+      "confusion_matrix_valid_only": {
+        "fn": 459,
+        "fp": 598,
+        "tn": 942,
+        "tp": 725
+      },
+      "f1": 0.5783805345033904,
+      "invalid_n": 0,
+      "invalid_positive_n": 0,
+      "invalid_rate": 0.0,
+      "mcc": 0.22218914489865293,
+      "metric_scope": "binary metrics condition on valid labels; invalids retained and reported separately",
+      "n": 2724,
+      "precision": 0.5479969765684052,
+      "predicted_positive_rate_all": 0.4856828193832599,
+      "recall": 0.612331081081081,
+      "recall_all_positives": 0.612331081081081,
+      "valid_n": 2724
+    }
+  },
+  {
+    "epoch": 14,
+    "loss": 1.2119549067457989,
+    "validation": {
+      "accuracy_all": 0.6024229074889867,
+      "accuracy_valid_only": 0.6024229074889867,
+      "balanced_accuracy": 0.6058134433134433,
+      "confusion_matrix_valid_only": {
+        "fn": 436,
+        "fp": 647,
+        "tn": 893,
+        "tp": 748
+      },
+      "f1": 0.58006979449399,
+      "invalid_n": 0,
+      "invalid_positive_n": 0,
+      "invalid_rate": 0.0,
+      "mcc": 0.20987342991213342,
+      "metric_scope": "binary metrics condition on valid labels; invalids retained and reported separately",
+      "n": 2724,
+      "precision": 0.5362007168458781,
+      "predicted_positive_rate_all": 0.512114537444934,
+      "recall": 0.6317567567567568,
+      "recall_all_positives": 0.6317567567567568,
+      "valid_n": 2724
+    }
+  },
+  {
+    "epoch": 15,
+    "loss": 1.210093509333612,
+    "validation": {
+      "accuracy_all": 0.6020558002936858,
+      "accuracy_valid_only": 0.6020558002936858,
+      "balanced_accuracy": 0.5999243155493156,
+      "confusion_matrix_valid_only": {
+        "fn": 493,
+        "fp": 591,
+        "tn": 949,
+        "tp": 691
+      },
+      "f1": 0.5604217356042174,
+      "invalid_n": 0,
+      "invalid_positive_n": 0,
+      "invalid_rate": 0.0,
+      "mcc": 0.1984772558085512,
+      "metric_scope": "binary metrics condition on valid labels; invalids retained and reported separately",
+      "n": 2724,
+      "precision": 0.5390015600624025,
+      "predicted_positive_rate_all": 0.47063142437591776,
+      "recall": 0.5836148648648649,
+      "recall_all_positives": 0.5836148648648649,
+      "valid_n": 2724
+    }
+  },
+  {
+    "epoch": 16,
+    "loss": 1.2087496616211284,
+    "validation": {
+      "accuracy_all": 0.6068281938325991,
+      "accuracy_valid_only": 0.6068281938325991,
+      "balanced_accuracy": 0.6094166812916813,
+      "confusion_matrix_valid_only": {
+        "fn": 439,
+        "fp": 632,
+        "tn": 908,
+        "tp": 745
+      },
+      "f1": 0.5818039828192113,
+      "invalid_n": 0,
+      "invalid_positive_n": 0,
+      "invalid_rate": 0.0,
+      "mcc": 0.2169696444861059,
+      "metric_scope": "binary metrics condition on valid labels; invalids retained and reported separately",
+      "n": 2724,
+      "precision": 0.5410312273057372,
+      "predicted_positive_rate_all": 0.5055066079295154,
+      "recall": 0.629222972972973,
+      "recall_all_positives": 0.629222972972973,
+      "valid_n": 2724
+    }
+  },
+  {
+    "epoch": 17,
+    "loss": 1.2095156840109758,
+    "validation": {
+      "accuracy_all": 0.6027900146842878,
+      "accuracy_valid_only": 0.6027900146842878,
+      "balanced_accuracy": 0.6043809231309232,
+      "confusion_matrix_valid_only": {
+        "fn": 454,
+        "fp": 628,
+        "tn": 912,
+        "tp": 730
+      },
+      "f1": 0.5743509047993706,
+      "invalid_n": 0,
+      "invalid_positive_n": 0,
+      "invalid_rate": 0.0,
+      "mcc": 0.2069722428954524,
+      "metric_scope": "binary metrics condition on valid labels; invalids retained and reported separately",
+      "n": 2724,
+      "precision": 0.5375552282768777,
+      "predicted_positive_rate_all": 0.4985315712187959,
+      "recall": 0.6165540540540541,
+      "recall_all_positives": 0.6165540540540541,
+      "valid_n": 2724
+    }
+  },
+  {
+    "epoch": 18,
+    "loss": 1.2068154395486643,
+    "validation": {
+      "accuracy_all": 0.5950807635829662,
+      "accuracy_valid_only": 0.5950807635829662,
+      "balanced_accuracy": 0.5933649964899965,
+      "confusion_matrix_valid_only": {
+        "fn": 497,
+        "fp": 606,
+        "tn": 934,
+        "tp": 687
+      },
+      "f1": 0.55470327008478,
+      "invalid_n": 0,
+      "invalid_positive_n": 0,
+      "invalid_rate": 0.0,
+      "mcc": 0.18536648433506342,
+      "metric_scope": "binary metrics condition on valid labels; invalids retained and reported separately",
+      "n": 2724,
+      "precision": 0.531322505800464,
+      "predicted_positive_rate_all": 0.4746696035242291,
+      "recall": 0.5802364864864865,
+      "recall_all_positives": 0.5802364864864865,
+      "valid_n": 2724
+    }
+  },
+  {
+    "epoch": 19,
+    "loss": 1.2077396458184146,
+    "validation": {
+      "accuracy_all": 0.6079295154185022,
+      "accuracy_valid_only": 0.6079295154185022,
+      "balanced_accuracy": 0.6069739382239383,
+      "confusion_matrix_valid_only": {
+        "fn": 474,
+        "fp": 594,
+        "tn": 946,
+        "tp": 710
+      },
+      "f1": 0.5707395498392283,
+      "invalid_n": 0,
+      "invalid_positive_n": 0,
+      "invalid_rate": 0.0,
+      "mcc": 0.21230548962446993,
+      "metric_scope": "binary metrics condition on valid labels; invalids retained and reported separately",
+      "n": 2724,
+      "precision": 0.5444785276073619,
+      "predicted_positive_rate_all": 0.4787077826725404,
+      "recall": 0.5996621621621622,
+      "recall_all_positives": 0.5996621621621622,
+      "valid_n": 2724
+    }
+  }
+]

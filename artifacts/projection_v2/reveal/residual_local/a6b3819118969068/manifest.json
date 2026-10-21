@@ -1,0 +1,103 @@
+{
+  "best": {
+    "epoch": 2,
+    "retrieval": {
+      "classifier_mcc_proxy": 0.33839183336870976,
+      "macro_label_hit_at_5": 0.9096187761349646,
+      "macro_label_precision_at_5": 0.6361136683784954,
+      "per_class_label_precision_at_5": {
+        "0": 0.9261599210266536,
+        "1": 0.34606741573033706
+      },
+      "scope": "label relevance proxy in common top50; not LLM demonstration utility",
+      "teacher_top5_overlap": 0.9294918330308529,
+      "validation_queries": 2204
+    },
+    "selection_status": "validation_proxy_gain"
+  },
+  "completed_epochs": 10,
+  "config": {
+    "batch_size": 128,
+    "device": "auto",
+    "dimension": 256,
+    "dropout": 0.1,
+    "epochs": 30,
+    "geometry_weight": 1.0,
+    "hard_ramp_epochs": 5,
+    "hard_warmup_epochs": 3,
+    "hidden_dimension": 256,
+    "learning_rate": 0.0003,
+    "local_weight": 0.1,
+    "margin": 0.2,
+    "negative_neighbors": 32,
+    "negatives_per_anchor": 8,
+    "objective": "residual_local",
+    "patience": 8,
+    "positive_neighbors": 8,
+    "residual_radius": 0.25,
+    "seed": 42,
+    "selection_max_class_drop": 0.02,
+    "selection_min_gain": 0.002,
+    "selection_min_teacher_overlap": 0.5,
+    "semi_hard_weight": 0.05,
+    "temperature": 0.1,
+    "weight_decay": 0.001
+  },
+  "dataset": "reveal",
+  "device": "cpu",
+  "encoder_recipe": {
+    "architecture": "T5Encoder",
+    "checkpoint": {
+      "config.json": "747cddfb84f44944822684ab4c1815f4043345e79f4be70e1bcdbb60b5e5dbd1",
+      "merges.txt": "5d346f84939a98df0cde902df7d60154b461cde1b90dc653ab9b81d74e752a4d",
+      "pytorch_model.bin": "053fbafd36f4011e13fe10f45d588102ffa7448f338443ff787e85360cd5e13c",
+      "vocab.json": "43bb485f4de0f2fd49b370bef4efab23ea3ab6d0019e72bdd9cec1436a6eaa2b"
+    },
+    "max_length": 512,
+    "pooling": "masked_mean",
+    "seed": 42
+  },
+  "gpu_name": null,
+  "numpy": "1.26.4",
+  "objective": "residual_local",
+  "parameters": 263170,
+  "path": "artifacts/projection_v2/reveal/residual_local/a6b3819118969068/projection.npz",
+  "peak_gpu_allocated_bytes": null,
+  "projection_sha256": "4567ad5c2e319fbfc3ab19263e6fdf796b142ee9dc6f26c633df0e3d68c1211c",
+  "schema": "grace_projection_v2",
+  "selection": "validation macro label P@5 with per-class/geometry gates; proxy, not LLM utility",
+  "selection_status": "validation_proxy_gain",
+  "source": {
+    "data.py": "abb050568e2554c14307f7e6012f32afec1b7dab5d045991a7bbcc542dadf520",
+    "metrics.py": "f1d3b3bdcaa55c6120dd6ff11c1fba225d9abff41e2f68c5b5e1beac7038185e",
+    "projection.py": "d1f92309ebc34275cf714146b940b5362239e49cef262b713220156e764b8317",
+    "projection_v2.py": "429a4fdb3ca1998447126e54852cf36a2fcb69e595a528b771d937477092f45c",
+    "reference.py": "c81abb7376a8c43ba192598b63c3693884ac4eb7e4593cda9f7aaed246abc82e",
+    "retrieval.py": "bad51d118378290b6a9f34c6e52bbdbdd67ef9017b5d98d472816f01e68f722e"
+  },
+  "supervised_rows_sha256": {
+    "train": "bdf1b98d45d105a504574951c03fb130dc2c350fd8de8c00cb419d78e901f0c7",
+    "validation": "51cfecddbac3473037273c7b776284e6d57eeb7c7292802694786ec1e3088252"
+  },
+  "test_labels_or_responses_used": false,
+  "torch": "2.11.0+cpu",
+  "train_identity": "c4c3e80a79615dc7c2bd4195d953cc821632d3642fa66f4be1926d5ea0a36035",
+  "train_rows": 18187,
+  "train_seconds_this_session": 109.95533900000737,
+  "training_fingerprint": "a6b3819118969068c2e4f07cf3884a561a5351349855559c3ee70e81b7f9101f",
+  "training_unique_unambiguous_rows": 17761,
+  "validation_baseline": {
+    "macro_label_hit_at_5": 0.9040007986068747,
+    "macro_label_precision_at_5": 0.6266313209179543,
+    "per_class_label_precision_at_5": {
+      "0": 0.9251727541954591,
+      "1": 0.3280898876404495
+    },
+    "scope": "label relevance proxy in common top50; not LLM demonstration utility",
+    "teacher_top5_overlap": 1.0,
+    "validation_queries": 2204
+  },
+  "validation_excluded_train_duplicates": 69,
+  "validation_identity": "e4accc3e2125d8bac7291c7dd2a231c3f9db3c39a480fe05feca7e887f8aa1d4",
+  "validation_selection_rows": 2204
+}

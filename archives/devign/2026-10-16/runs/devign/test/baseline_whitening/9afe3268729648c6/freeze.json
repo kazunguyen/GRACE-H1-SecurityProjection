@@ -1,0 +1,11 @@
+{
+  "files": {
+    "configs/prompt_template.txt": "7b018e2a1e7388e6118c1f7a7fb6b41fdb7db91684d41c64f49273fd349cb098",
+    "configs/reference_contract.yaml": "becd38a9afd9677f2cdee47b1669f0442e53dd82c4b001c137d90d83a6710b3c",
+    "data/manifest.json": "a3f86cbf6b3ac9aff681ac890711e7600e7546d52dc7fc55a73632bab902b0c4",
+    "runs/devign/test/baseline_whitening/9afe3268729648c6/graph_feature_index.jsonl": "6ccf5b5d6663924c7b8966f3653fa8576d21dada10dca350492651a432d1435b",
+    "runs/devign/test/baseline_whitening/9afe3268729648c6/prompts.jsonl": "4ca9ed585dd538c94eed7cef489a1c980148bba42f76699ba6107f131fd9d9b5",
+    "runs/devign/test/baseline_whitening/9afe3268729648c6/retrieval.jsonl": "569cb9d3c57b353b648849c9d53443e96306b4877fb81ccd58932868b620456b",
+    "runs/devign/test/baseline_whitening/9afe3268729648c6/run_manifest.json": "d6f39c5a5ec894e3387a5f338a1da5697ba3dccad3e332e0a82f14d5152fb1e9"
+  }
+}
